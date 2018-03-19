@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "170268012957",
+    "firebase_url": "https://surfcourse-533da.firebaseio.com",
+    "project_id": "surfcourse-533da",
+    "storage_bucket": "surfcourse-533da.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:170268012957:android:d0b2b7a87199e7fa",
+        "android_client_info": {
+          "package_name": "com.apps.dcodertech.coursesurfer"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "170268012957-ganjktchhugk8jc2a1fr1ck27ddntglt.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.apps.dcodertech.coursesurfer",
+            "certificate_hash": "7680d246084b27e262d1d6fea8e73687b252fb96"
+          }
+        },
+        {
+          "client_id": "170268012957-krdshg0n6j55bqcobn19272t42vor991.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDpiJPM4HLhicZgxj7esD0_oOgGFZvcw54"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "170268012957-krdshg0n6j55bqcobn19272t42vor991.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
