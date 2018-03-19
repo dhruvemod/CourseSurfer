@@ -7,8 +7,24 @@ import java.io.Serializable;
  */
 
 public class Courses implements Serializable {
+    String course_prof;
     String course_certifications,course_duration,course_hours,course_institution,course_keywords,course_lang,course_link,course_name,course_provider,course_subject,course_val,sc_url;
     public Courses(){}
+    public Courses(String course_val,String course_provider,String course_keywords,String course_name,String course_prof,String course_hours,String course_link,String course_certifications,String course_duration,String course_lang,String course_subject,String sc_url,String course_institution){
+        this.course_val=course_val;
+        this.course_prof=course_prof;
+        this.course_provider=course_provider;
+        this.course_keywords=course_keywords;
+        this.course_name=course_name;
+        this.course_hours=course_hours;
+        this.course_link=course_link;
+        this.course_certifications=course_certifications;
+        this.course_duration=course_duration;
+        this.course_lang=course_lang;
+        this.course_subject=course_subject;
+        this.sc_url=sc_url;
+        this.course_institution=course_institution;
+    }
     public Courses(String course_val,String course_provider,String course_keywords,String course_name,String course_hours,String course_link,String course_certifications,String course_duration,String course_lang,String course_subject,String sc_url,String course_institution){
         this.course_val=course_val;
         this.course_provider=course_provider;
@@ -22,6 +38,14 @@ public class Courses implements Serializable {
         this.course_subject=course_subject;
         this.sc_url=sc_url;
         this.course_institution=course_institution;
+    }
+
+    public String getCourse_prof() {
+        return course_prof;
+    }
+
+    public void setCourse_prof(String course_prof) {
+        this.course_prof = course_prof;
     }
 
     public String getCourse_certifications() {

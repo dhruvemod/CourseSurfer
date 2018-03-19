@@ -33,8 +33,10 @@ public class customAdapter extends ArrayAdapter<Courses> {
         Courses courses = getItem(position);
         TextView title = listItemView.findViewById(R.id.titleView);
         title.setText(courses.getCourse_name());
+
         TextView authors = listItemView.findViewById(R.id.authorsView);
-        authors.setText(courses.getCourse_provider());
+        authors.setText(courses.getCourse_prof());
+        TextView company = listItemView.findViewById(R.id.CourseCompanyView);
         TextView certification = listItemView.findViewById(R.id.certificationView);
         certification.setText(courses.getCourse_certifications());
         TextView university = listItemView.findViewById(R.id.universityProvider);

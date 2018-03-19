@@ -1,5 +1,7 @@
 package com.apps.dcodertech.coursesurfer;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
@@ -10,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -48,8 +51,8 @@ public class MainActivity extends AppCompatActivity {
     private RequestQueue requestQueue;
     private JsonObjectRequest objectRequest;
     String s;
-    final String branches[] = {"Android Development", "Mobile Development", "Computer Science", "DevOps", "Course Development"};//to be received
-    final String modified = "android";
+    //final String branches[] = {"Android Development", "Mobile Development", "Computer Science", "DevOps", "Course Development"};//to be received
+    //final String modified = "android";
     private String url = "http://13.127.127.229/predict";
 
 
@@ -63,19 +66,30 @@ public class MainActivity extends AppCompatActivity {
 
         databaseReference = FirebaseDatabase.getInstance().getReference().child("course_data");
         button = findViewById(R.id.submit);
+        if(adapter!=null) {
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                    Courses c = adapter.getItem(i);
+                    String url = c.getCourse_link();
 
+                    Toast.makeText(MainActivity.this,"aya hai", Toast.LENGTH_SHORT).show();
 
+                }
+            });
+        }
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 listView = findViewById(R.id.my_recycler_view);
                 adapter = new customAdapter(MainActivity.this, courseList);
                 listView.setAdapter(adapter);
+
                 if (TextUtils.isEmpty(editText.getText())) {
                     Toast.makeText(MainActivity.this, "Enter first", Toast.LENGTH_SHORT).show();
                 } else {
 
-
+                    adapter.clear();
                     s = editText.getText().toString();
                     dataFetch(s);
                     /*
@@ -140,7 +154,7 @@ public class MainActivity extends AppCompatActivity {
                         arr[i]=array.getString(i);
                     }
                     String mod="";
-                    mod=response.getString("sub");
+                    mod=response.getString("query");
                     dataProcess(mod,arr);
 
                 } catch (JSONException e) {
@@ -156,11 +170,13 @@ public class MainActivity extends AppCompatActivity {
         });
         requestQueue.add(objectRequest);
     }
-    public void dataProcess(String mod,String li[]){
+    public void dataProcess(String m,String li[]){
+
+        final String g=m;
         //s = editText.getText().toString();
 
-        for (int i = 0; i < branches.length; i++) {
-            String seg = branches[i];
+        for (int i = 0; i < li.length; i++) {
+            String seg = li[i];
             databaseReference.child(seg).addChildEventListener(new ChildEventListener() {
                 @Override
                 public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -168,7 +184,7 @@ public class MainActivity extends AppCompatActivity {
                     Courses courses = dataSnapshot.getValue(Courses.class);
                     String keyword = courses.getCourse_keywords();
 
-                    if (keyword.contains(modified)) {
+                    if (keyword.contains(g) && courses.getCourse_lang().equals("English")) {
                         courseList.add(courses);
                         if (adapter != null)
                             adapter.notifyDataSetChanged();
@@ -199,7 +215,20 @@ public class MainActivity extends AppCompatActivity {
             });
             // Log.i("Sub:",seg);
         }
+        if(adapter!=null) {
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                    Courses c = adapter.getItem(i);
+                    String url = c.getCourse_link();
+                    Intent intent=new Intent(MainActivity.this,webView.class);
+                    intent.putExtra("webLink",url);
+                    startActivity(intent);
+                    //Toast.makeText(MainActivity.this,url, Toast.LENGTH_SHORT).show();
 
+                }
+            });
+        }
     }
 
 }
