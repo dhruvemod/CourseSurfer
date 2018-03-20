@@ -42,17 +42,14 @@ import java.util.Map;
 public class MainActivity extends AppCompatActivity {
     EditText editText;
     Button button;
-    ListView listView;
-    CardView cardView;
-    customAdapter adapter;
+    private RecyclerView recyclerView;
+    private RecyclerViewAdapter adapter;
     DatabaseReference databaseReference;
 
-    private static ArrayList<Courses> courseList;
+    private static List<Courses> courseList;
     private RequestQueue requestQueue;
     private JsonObjectRequest objectRequest;
     String s;
-    //final String branches[] = {"Android Development", "Mobile Development", "Computer Science", "DevOps", "Course Development"};//to be received
-    //final String modified = "android";
     private String url = "http://13.127.127.229/predict";
 
 
@@ -61,12 +58,17 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         editText = findViewById(R.id.editText);
+        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
 
         courseList = new ArrayList<Courses>();
-
+        adapter=new RecyclerViewAdapter(this,courseList);
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(adapter);
         databaseReference = FirebaseDatabase.getInstance().getReference().child("course_data");
         button = findViewById(R.id.submit);
-        if(adapter!=null) {
+        /*if(adapter!=null) {
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -77,66 +79,25 @@ public class MainActivity extends AppCompatActivity {
 
                 }
             });
-        }
+        }*/
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                listView = findViewById(R.id.my_recycler_view);
-                adapter = new customAdapter(MainActivity.this, courseList);
-                listView.setAdapter(adapter);
 
+                recyclerView.setAdapter(adapter);
                 if (TextUtils.isEmpty(editText.getText())) {
                     Toast.makeText(MainActivity.this, "Enter first", Toast.LENGTH_SHORT).show();
                 } else {
-
-                    adapter.clear();
+                    clear();
                     s = editText.getText().toString();
                     dataFetch(s);
-                    /*
-                    for (int i = 0; i < branches.length; i++) {
-                        String seg = branches[i];
-                        databaseReference.child(seg).addChildEventListener(new ChildEventListener() {
-                            @Override
-                            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-
-                                Courses courses = dataSnapshot.getValue(Courses.class);
-                                String keyword = courses.getCourse_keywords();
-
-                                if (keyword.contains(modified)) {
-                                    courseList.add(courses);
-                                    if (adapter != null)
-                                        adapter.notifyDataSetChanged();
-
-                                }
-                                // Log.i("check",String.valueOf(courseList.size()));
-                            }
-
-                            @Override
-                            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-                            }
-
-                            @Override
-                            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-                            }
-
-                            @Override
-                            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-                            }
-
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
-
-                            }
-                        });
-                        // Log.i("Sub:",seg);
-                    }*/
-
                 }
             }
         });
+    }
+    public void clear() {
+        courseList.clear();
+        adapter.notifyDataSetChanged();
     }
     public void dataFetch(String input) {
         Map<String, String> map = new HashMap<>();
@@ -173,7 +134,6 @@ public class MainActivity extends AppCompatActivity {
     public void dataProcess(String m,String li[]){
 
         final String g=m;
-        //s = editText.getText().toString();
 
         for (int i = 0; i < li.length; i++) {
             String seg = li[i];
@@ -190,7 +150,7 @@ public class MainActivity extends AppCompatActivity {
                             adapter.notifyDataSetChanged();
 
                     }
-                    // Log.i("check",String.valueOf(courseList.size()));
+
                 }
 
                 @Override
@@ -215,7 +175,9 @@ public class MainActivity extends AppCompatActivity {
             });
             // Log.i("Sub:",seg);
         }
-        if(adapter!=null) {
+
+
+        /*if(adapter!=null) {
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -228,7 +190,7 @@ public class MainActivity extends AppCompatActivity {
 
                 }
             });
-        }
+        }*/
     }
 
 }
