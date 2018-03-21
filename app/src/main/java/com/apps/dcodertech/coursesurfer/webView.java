@@ -2,6 +2,7 @@ package com.apps.dcodertech.coursesurfer;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -10,22 +11,25 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Button;
 import android.widget.ProgressBar;
 
 public class webView extends AppCompatActivity {
     ProgressBar progressBar;
     WebView browser;
-
+    Button b;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_web_view);
         progressBar=findViewById(R.id.progressBar);
         browser=findViewById(R.id.webView);
+        b=findViewById(R.id.browButton);
+
         browser.setWebViewClient(new myWebClient());
 
         Bundle bundle=getIntent().getExtras();
-        String url=bundle.getString("webLink");
+        final String url=bundle.getString("webLink");
         browser.getSettings().setLoadsImagesAutomatically(true);
         browser.getSettings().setJavaScriptEnabled(true);
         browser.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
@@ -33,6 +37,14 @@ public class webView extends AppCompatActivity {
         webSettings.setSupportMultipleWindows(true);
         browser.getProgress();
         browser.loadUrl(url);
+        b.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i=new Intent(Intent.ACTION_VIEW);
+                i.setData(Uri.parse(url));
+                startActivity(i);
+            }
+        });
     }
     public class myWebClient extends WebViewClient
     {

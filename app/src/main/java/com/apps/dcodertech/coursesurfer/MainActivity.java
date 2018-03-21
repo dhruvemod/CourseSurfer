@@ -1,7 +1,9 @@
 package com.apps.dcodertech.coursesurfer;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
@@ -9,13 +11,19 @@ import android.support.v7.widget.DefaultItemAnimator;
 
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
+
+import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
+
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -42,10 +50,14 @@ import java.util.Map;
 public class MainActivity extends AppCompatActivity {
     EditText editText;
     Button button;
+    private Toolbar mToolbar;
+
     private RecyclerView recyclerView;
     private RecyclerViewAdapter adapter;
     DatabaseReference databaseReference;
-
+    private MenuItem mSearchAction;
+    private boolean isSearchOpened = false;
+    private EditText edtSeach;
     private static List<Courses> courseList;
     private RequestQueue requestQueue;
     private JsonObjectRequest objectRequest;
@@ -57,9 +69,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        editText = findViewById(R.id.editText);
+        //editText = findViewById(R.id.editText);
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-
+        mToolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
         courseList = new ArrayList<Courses>();
         adapter=new RecyclerViewAdapter(this,courseList);
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
@@ -67,20 +80,9 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adapter);
         databaseReference = FirebaseDatabase.getInstance().getReference().child("course_data");
-        button = findViewById(R.id.submit);
-        /*if(adapter!=null) {
-            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                    Courses c = adapter.getItem(i);
-                    String url = c.getCourse_link();
+        //button = findViewById(R.id.submit);
 
-                    Toast.makeText(MainActivity.this,"aya hai", Toast.LENGTH_SHORT).show();
-
-                }
-            });
-        }*/
-        button.setOnClickListener(new View.OnClickListener() {
+      /*  button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -93,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
                     dataFetch(s);
                 }
             }
-        });
+        });*/
     }
     public void clear() {
         courseList.clear();
@@ -177,20 +179,99 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-        /*if(adapter!=null) {
-            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                    Courses c = adapter.getItem(i);
-                    String url = c.getCourse_link();
-                    Intent intent=new Intent(MainActivity.this,webView.class);
-                    intent.putExtra("webLink",url);
-                    startActivity(intent);
-                    //Toast.makeText(MainActivity.this,url, Toast.LENGTH_SHORT).show();
-
-                }
-            });
-        }*/
     }
 
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        mSearchAction = menu.findItem(R.id.action_search);
+        return super.onPrepareOptionsMenu(menu);
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        switch (id) {
+            case R.id.action_settings:
+                return true;
+            case R.id.action_search:
+                handleMenuSearch();
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+    protected void handleMenuSearch(){
+        ActionBar action = getSupportActionBar(); //get the actionbar
+
+        if(isSearchOpened){ //test if the search is open
+
+            action.setDisplayShowCustomEnabled(false); //disable a custom view inside the actionbar
+            action.setDisplayShowTitleEnabled(true); //show the title in the action bar
+
+            //hides the keyboard
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(edtSeach.getWindowToken(), 0);
+
+            //add the search icon in the action bar
+            mSearchAction.setIcon(getResources().getDrawable(R.drawable.icon_search));
+
+            isSearchOpened = false;
+        } else { //open the search entry
+
+            action.setDisplayShowCustomEnabled(true); //enable it to display a
+            // custom view in the action bar.
+            action.setCustomView(R.layout.search_bar);//add the custom view
+            action.setDisplayShowTitleEnabled(false); //hide the title
+
+            edtSeach = (EditText)action.getCustomView().findViewById(R.id.edtSearch); //the text editor
+
+            //this is a listener to do a search when the user clicks on search button
+            edtSeach.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                @Override
+                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                    if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                        doSearch();
+                        return true;
+                    }
+                    return false;
+                }
+            });
+
+
+            edtSeach.requestFocus();
+
+            //open the keyboard focused in the edtSearch
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.showSoftInput(edtSeach, InputMethodManager.SHOW_IMPLICIT);
+
+
+            //add the close icon
+            mSearchAction.setIcon(getResources().getDrawable(R.drawable.icon_close));
+
+            isSearchOpened = true;
+        }
+    }
+    @Override
+    public void onBackPressed() {
+        if(isSearchOpened) {
+            handleMenuSearch();
+            return;
+        }
+        super.onBackPressed();
+    }
+    private void doSearch() {
+        recyclerView.setAdapter(adapter);
+        if (TextUtils.isEmpty(edtSeach.getText())) {
+            Toast.makeText(MainActivity.this, "Enter first", Toast.LENGTH_SHORT).show();
+        } else {
+            clear();
+            s = edtSeach.getText().toString();
+            dataFetch(s);
+        }
+    }
 }
