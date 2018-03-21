@@ -23,6 +23,7 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -51,7 +52,8 @@ public class MainActivity extends AppCompatActivity {
     EditText editText;
     Button button;
     private Toolbar mToolbar;
-
+    private TextView empty;
+    private ImageView imageView;
     private RecyclerView recyclerView;
     private RecyclerViewAdapter adapter;
     DatabaseReference databaseReference;
@@ -72,6 +74,8 @@ public class MainActivity extends AppCompatActivity {
         //editText = findViewById(R.id.editText);
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         mToolbar = findViewById(R.id.toolbar);
+        empty=findViewById(R.id.empty_view);
+        imageView=findViewById(R.id.imageView);
         setSupportActionBar(mToolbar);
         courseList = new ArrayList<Courses>();
         adapter=new RecyclerViewAdapter(this,courseList);
@@ -80,22 +84,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adapter);
         databaseReference = FirebaseDatabase.getInstance().getReference().child("course_data");
-        //button = findViewById(R.id.submit);
 
-      /*  button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                recyclerView.setAdapter(adapter);
-                if (TextUtils.isEmpty(editText.getText())) {
-                    Toast.makeText(MainActivity.this, "Enter first", Toast.LENGTH_SHORT).show();
-                } else {
-                    clear();
-                    s = editText.getText().toString();
-                    dataFetch(s);
-                }
-            }
-        });*/
     }
     public void clear() {
         courseList.clear();
@@ -265,10 +254,13 @@ public class MainActivity extends AppCompatActivity {
         super.onBackPressed();
     }
     private void doSearch() {
+
         recyclerView.setAdapter(adapter);
         if (TextUtils.isEmpty(edtSeach.getText())) {
-            Toast.makeText(MainActivity.this, "Enter first", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, "Enter the course you wish to learn!", Toast.LENGTH_SHORT).show();
         } else {
+            imageView.setVisibility(View.INVISIBLE);
+            empty.setVisibility(View.INVISIBLE);
             clear();
             s = edtSeach.getText().toString();
             dataFetch(s);
