@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:backgroundTint="#b2dfdb"
     android:orientation="vertical"
     tools:context="com.apps.dcodertech.coursesurfer.MainActivity">
 
@@ -31,6 +32,7 @@
     </LinearLayout>
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view"
+        android:backgroundTint="#b2dfdb"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipToPadding="false"
