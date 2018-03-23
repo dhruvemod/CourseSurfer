@@ -2,7 +2,10 @@ package com.apps.dcodertech.coursesurfer;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.AsyncTask;
+import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -24,6 +27,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,17 +37,22 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.firebase.ui.auth.AuthUI;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.muddzdev.styleabletoastlibrary.StyleableToast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -58,7 +67,16 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerViewAdapter adapter;
     DatabaseReference databaseReference;
     private MenuItem mSearchAction;
+    private FirebaseAuth mFirebaseAuth;
+    private FirebaseAuth.AuthStateListener mAuthStateListener;
+    public static final int RC_SIGN_IN = 1;
+    public static final String ANONYMOUS = "anonymous";
+    private String mUsername;
+
     private boolean isSearchOpened = false;
+    private NetworkInfo info;
+    private Button share;
+    private ProgressBar progressBar;
     private EditText edtSeach;
     private static List<Courses> courseList;
     private RequestQueue requestQueue;
@@ -71,11 +89,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //editText = findViewById(R.id.editText);
-        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        recyclerView =findViewById(R.id.recycler_view);
         mToolbar = findViewById(R.id.toolbar);
+        share = findViewById(R.id.share);
+        mFirebaseAuth = FirebaseAuth.getInstance();
+
         empty=findViewById(R.id.empty_view);
         imageView=findViewById(R.id.imageView);
+        progressBar=findViewById(R.id.progressBar);
         setSupportActionBar(mToolbar);
         courseList = new ArrayList<Courses>();
         adapter=new RecyclerViewAdapter(this,courseList);
@@ -84,13 +105,25 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adapter);
         databaseReference = FirebaseDatabase.getInstance().getReference().child("course_data");
+        mAuthStateListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user != null) {
+                    onSignedInInitialize(user.getDisplayName());
+                } else {
+                    signUp();
+                }
+            }
+        };
 
     }
     public void clear() {
         courseList.clear();
         adapter.notifyDataSetChanged();
     }
-    public void dataFetch(String input) {
+
+    public void dataFetch(String input){
         Map<String, String> map = new HashMap<>();
         map.put("query", input);
 
@@ -98,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
         objectRequest = new JsonObjectRequest(Request.Method.POST, url, new JSONObject(map), new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-
+                progressBar.setVisibility(View.VISIBLE);
                 try {
                     JSONArray array=response.getJSONArray("sub");
                     String arr[]=new String[array.length()];
@@ -117,7 +150,7 @@ public class MainActivity extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(MainActivity.this, "error", Toast.LENGTH_SHORT).show();
+                StyleableToast.makeText(getApplicationContext(), "Error: No Internet Connection!", R.style.mytoast).show();
             }
         });
         requestQueue.add(objectRequest);
@@ -134,8 +167,9 @@ public class MainActivity extends AppCompatActivity {
 
                     Courses courses = dataSnapshot.getValue(Courses.class);
                     String keyword = courses.getCourse_keywords();
-
+                    progressBar.setVisibility(View.INVISIBLE);
                     if (keyword.contains(g) && courses.getCourse_lang().equals("English")) {
+
                         courseList.add(courses);
                         if (adapter != null)
                             adapter.notifyDataSetChanged();
@@ -171,6 +205,42 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RC_SIGN_IN) {
+            if (resultCode == RESULT_OK) {
+                // Sign-in succeeded, set up the UI
+                Toast.makeText(this, "Signed in!", Toast.LENGTH_SHORT).show();
+            } else if (resultCode == RESULT_CANCELED) {
+                // Sign in was canceled by the user, finish the activity
+                Toast.makeText(this, "Sign in canceled", Toast.LENGTH_SHORT).show();
+
+                finish();
+            }
+
+        }
+    }
+    public void signUp() {
+        onSignedOutCleanup();
+        startActivityForResult(
+                AuthUI.getInstance()
+                        .createSignInIntentBuilder()
+                        .setProviders(Arrays.asList(new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
+                                new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build()))
+                        .build(),
+                RC_SIGN_IN);
+    }
+
+    private void onSignedInInitialize(String username) {
+        mUsername = username;
+    }
+
+    private void onSignedOutCleanup() {
+        mUsername = ANONYMOUS;
+
+    }
+
+    @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         mSearchAction = menu.findItem(R.id.action_search);
         return super.onPrepareOptionsMenu(menu);
@@ -189,6 +259,19 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+    @Override
+    public void onStart() {
+        super.onStart();
+        mFirebaseAuth.addAuthStateListener(mAuthStateListener);
+    }
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (mAuthStateListener != null) {
+            mFirebaseAuth.removeAuthStateListener(mAuthStateListener);
+        }
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
@@ -257,7 +340,7 @@ public class MainActivity extends AppCompatActivity {
 
         recyclerView.setAdapter(adapter);
         if (TextUtils.isEmpty(edtSeach.getText())) {
-            Toast.makeText(MainActivity.this, "Enter the course you wish to learn!", Toast.LENGTH_SHORT).show();
+            StyleableToast.makeText(getApplicationContext(), "Please enter the course first!", R.style.mytoast).show();
         } else {
             imageView.setVisibility(View.INVISIBLE);
             empty.setVisibility(View.INVISIBLE);

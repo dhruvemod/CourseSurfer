@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,8 +29,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public class MyViewHolder extends RecyclerView.ViewHolder{
         private CardView cardView;
         public TextView title,author,company,provider,univ,certification,week,hours;
+        public Button share;
         public MyViewHolder(View view){
             super(view);
+            share=view.findViewById(R.id.share);
             cardView=view.findViewById(R.id.cardView);
             title=view.findViewById(R.id.cardTitleView);
             author=view.findViewById(R.id.cardAuthorsView);
@@ -69,6 +72,21 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         holder.certification.setText(c.getCourse_certifications());
         holder.week.setText(c.getCourse_duration());
         holder.hours.setText(c.getCourse_hours());
+        holder.share.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String url=c.getCourse_link();
+                Intent intent=new Intent(Intent.ACTION_SEND);
+                intent.setType("text/plain");
+                intent.putExtra(android.content.Intent.EXTRA_SUBJECT, "CourseSurfer");
+
+                intent.putExtra(android.content.Intent.EXTRA_TEXT, url+"\n For more courses use CourseSurfer!");
+                context.startActivity(Intent.createChooser(intent, "Share via"));
+
+
+
+            }
+        });
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.Window;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -22,10 +23,10 @@ public class webView extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_web_view);
-        progressBar=findViewById(R.id.progressBar);
+        progressBar=findViewById(R.id.progressBar1);
         browser=findViewById(R.id.webView);
         b=findViewById(R.id.browButton);
-
+        progressBar=new ProgressBar(getApplicationContext());
         browser.setWebViewClient(new myWebClient());
 
         Bundle bundle=getIntent().getExtras();
