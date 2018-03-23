@@ -1,7 +1,12 @@
 package com.apps.dcodertech.coursesurfer;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.AsyncTask;
+import android.support.annotation.NonNull;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
@@ -9,13 +14,21 @@ import android.support.v7.widget.DefaultItemAnimator;
 
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
+
+import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
+
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -24,17 +37,22 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.firebase.ui.auth.AuthUI;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.muddzdev.styleabletoastlibrary.StyleableToast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,17 +60,28 @@ import java.util.Map;
 public class MainActivity extends AppCompatActivity {
     EditText editText;
     Button button;
-    ListView listView;
-    CardView cardView;
-    customAdapter adapter;
+    private Toolbar mToolbar;
+    private TextView empty;
+    private ImageView imageView;
+    private RecyclerView recyclerView;
+    private RecyclerViewAdapter adapter;
     DatabaseReference databaseReference;
+    private MenuItem mSearchAction;
+    private FirebaseAuth mFirebaseAuth;
+    private FirebaseAuth.AuthStateListener mAuthStateListener;
+    public static final int RC_SIGN_IN = 1;
+    public static final String ANONYMOUS = "anonymous";
+    private String mUsername;
 
-    private static ArrayList<Courses> courseList;
+    private boolean isSearchOpened = false;
+    private NetworkInfo info;
+    private Button share;
+    private ProgressBar progressBar;
+    private EditText edtSeach;
+    private static List<Courses> courseList;
     private RequestQueue requestQueue;
     private JsonObjectRequest objectRequest;
     String s;
-    //final String branches[] = {"Android Development", "Mobile Development", "Computer Science", "DevOps", "Course Development"};//to be received
-    //final String modified = "android";
     private String url = "http://13.127.127.229/predict";
 
 
@@ -60,85 +89,41 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        editText = findViewById(R.id.editText);
+        recyclerView =findViewById(R.id.recycler_view);
+        mToolbar = findViewById(R.id.toolbar);
+        share = findViewById(R.id.share);
+        mFirebaseAuth = FirebaseAuth.getInstance();
 
+        empty=findViewById(R.id.empty_view);
+        imageView=findViewById(R.id.imageView);
+        progressBar=findViewById(R.id.progressBar);
+        setSupportActionBar(mToolbar);
         courseList = new ArrayList<Courses>();
-
+        adapter=new RecyclerViewAdapter(this,courseList);
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(adapter);
         databaseReference = FirebaseDatabase.getInstance().getReference().child("course_data");
-        button = findViewById(R.id.submit);
-        if(adapter!=null) {
-            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                    Courses c = adapter.getItem(i);
-                    String url = c.getCourse_link();
-
-                    Toast.makeText(MainActivity.this,"aya hai", Toast.LENGTH_SHORT).show();
-
-                }
-            });
-        }
-        button.setOnClickListener(new View.OnClickListener() {
+        mAuthStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
-            public void onClick(View view) {
-                listView = findViewById(R.id.my_recycler_view);
-                adapter = new customAdapter(MainActivity.this, courseList);
-                listView.setAdapter(adapter);
-
-                if (TextUtils.isEmpty(editText.getText())) {
-                    Toast.makeText(MainActivity.this, "Enter first", Toast.LENGTH_SHORT).show();
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user != null) {
+                    onSignedInInitialize(user.getDisplayName());
                 } else {
-
-                    adapter.clear();
-                    s = editText.getText().toString();
-                    dataFetch(s);
-                    /*
-                    for (int i = 0; i < branches.length; i++) {
-                        String seg = branches[i];
-                        databaseReference.child(seg).addChildEventListener(new ChildEventListener() {
-                            @Override
-                            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-
-                                Courses courses = dataSnapshot.getValue(Courses.class);
-                                String keyword = courses.getCourse_keywords();
-
-                                if (keyword.contains(modified)) {
-                                    courseList.add(courses);
-                                    if (adapter != null)
-                                        adapter.notifyDataSetChanged();
-
-                                }
-                                // Log.i("check",String.valueOf(courseList.size()));
-                            }
-
-                            @Override
-                            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-                            }
-
-                            @Override
-                            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-                            }
-
-                            @Override
-                            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-                            }
-
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
-
-                            }
-                        });
-                        // Log.i("Sub:",seg);
-                    }*/
-
+                    signUp();
                 }
             }
-        });
+        };
+
     }
-    public void dataFetch(String input) {
+    public void clear() {
+        courseList.clear();
+        adapter.notifyDataSetChanged();
+    }
+
+    public void dataFetch(String input){
         Map<String, String> map = new HashMap<>();
         map.put("query", input);
 
@@ -146,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
         objectRequest = new JsonObjectRequest(Request.Method.POST, url, new JSONObject(map), new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-
+                progressBar.setVisibility(View.VISIBLE);
                 try {
                     JSONArray array=response.getJSONArray("sub");
                     String arr[]=new String[array.length()];
@@ -165,7 +150,7 @@ public class MainActivity extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(MainActivity.this, "error", Toast.LENGTH_SHORT).show();
+                StyleableToast.makeText(getApplicationContext(), "Error: No Internet Connection!", R.style.mytoast).show();
             }
         });
         requestQueue.add(objectRequest);
@@ -173,7 +158,6 @@ public class MainActivity extends AppCompatActivity {
     public void dataProcess(String m,String li[]){
 
         final String g=m;
-        //s = editText.getText().toString();
 
         for (int i = 0; i < li.length; i++) {
             String seg = li[i];
@@ -183,14 +167,15 @@ public class MainActivity extends AppCompatActivity {
 
                     Courses courses = dataSnapshot.getValue(Courses.class);
                     String keyword = courses.getCourse_keywords();
-
+                    progressBar.setVisibility(View.INVISIBLE);
                     if (keyword.contains(g) && courses.getCourse_lang().equals("English")) {
+
                         courseList.add(courses);
                         if (adapter != null)
                             adapter.notifyDataSetChanged();
 
                     }
-                    // Log.i("check",String.valueOf(courseList.size()));
+
                 }
 
                 @Override
@@ -215,20 +200,153 @@ public class MainActivity extends AppCompatActivity {
             });
             // Log.i("Sub:",seg);
         }
-        if(adapter!=null) {
-            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                    Courses c = adapter.getItem(i);
-                    String url = c.getCourse_link();
-                    Intent intent=new Intent(MainActivity.this,webView.class);
-                    intent.putExtra("webLink",url);
-                    startActivity(intent);
-                    //Toast.makeText(MainActivity.this,url, Toast.LENGTH_SHORT).show();
 
-                }
-            });
+
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RC_SIGN_IN) {
+            if (resultCode == RESULT_OK) {
+                // Sign-in succeeded, set up the UI
+                Toast.makeText(this, "Signed in!", Toast.LENGTH_SHORT).show();
+            } else if (resultCode == RESULT_CANCELED) {
+                // Sign in was canceled by the user, finish the activity
+                Toast.makeText(this, "Sign in canceled", Toast.LENGTH_SHORT).show();
+
+                finish();
+            }
+
+        }
+    }
+    public void signUp() {
+        onSignedOutCleanup();
+        startActivityForResult(
+                AuthUI.getInstance()
+                        .createSignInIntentBuilder()
+                        .setProviders(Arrays.asList(new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
+                                new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build()))
+                        .build(),
+                RC_SIGN_IN);
+    }
+
+    private void onSignedInInitialize(String username) {
+        mUsername = username;
+    }
+
+    private void onSignedOutCleanup() {
+        mUsername = ANONYMOUS;
+
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        mSearchAction = menu.findItem(R.id.action_search);
+        return super.onPrepareOptionsMenu(menu);
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        switch (id) {
+            case R.id.action_settings:
+                return true;
+            case R.id.action_search:
+                handleMenuSearch();
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+    @Override
+    public void onStart() {
+        super.onStart();
+        mFirebaseAuth.addAuthStateListener(mAuthStateListener);
+    }
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (mAuthStateListener != null) {
+            mFirebaseAuth.removeAuthStateListener(mAuthStateListener);
         }
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+    protected void handleMenuSearch(){
+        ActionBar action = getSupportActionBar(); //get the actionbar
+
+        if(isSearchOpened){ //test if the search is open
+
+            action.setDisplayShowCustomEnabled(false); //disable a custom view inside the actionbar
+            action.setDisplayShowTitleEnabled(true); //show the title in the action bar
+
+            //hides the keyboard
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(edtSeach.getWindowToken(), 0);
+
+            //add the search icon in the action bar
+            mSearchAction.setIcon(getResources().getDrawable(R.drawable.icon_search));
+
+            isSearchOpened = false;
+        } else { //open the search entry
+
+            action.setDisplayShowCustomEnabled(true); //enable it to display a
+            // custom view in the action bar.
+            action.setCustomView(R.layout.search_bar);//add the custom view
+            action.setDisplayShowTitleEnabled(false); //hide the title
+
+            edtSeach = (EditText)action.getCustomView().findViewById(R.id.edtSearch); //the text editor
+
+            //this is a listener to do a search when the user clicks on search button
+            edtSeach.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                @Override
+                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                    if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                        doSearch();
+                        return true;
+                    }
+                    return false;
+                }
+            });
+
+
+            edtSeach.requestFocus();
+
+            //open the keyboard focused in the edtSearch
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.showSoftInput(edtSeach, InputMethodManager.SHOW_IMPLICIT);
+
+
+            //add the close icon
+            mSearchAction.setIcon(getResources().getDrawable(R.drawable.icon_close));
+
+            isSearchOpened = true;
+        }
+    }
+    @Override
+    public void onBackPressed() {
+        if(isSearchOpened) {
+            handleMenuSearch();
+            return;
+        }
+        super.onBackPressed();
+    }
+    private void doSearch() {
+
+        recyclerView.setAdapter(adapter);
+        if (TextUtils.isEmpty(edtSeach.getText())) {
+            StyleableToast.makeText(getApplicationContext(), "Please enter the course first!", R.style.mytoast).show();
+        } else {
+            imageView.setVisibility(View.INVISIBLE);
+            empty.setVisibility(View.INVISIBLE);
+            clear();
+            s = edtSeach.getText().toString();
+            dataFetch(s);
+        }
+    }
 }
