@@ -15,7 +15,15 @@
       },
       "oauth_client": [
         {
-          "client_id": "170268012957-ganjktchhugk8jc2a1fr1ck27ddntglt.apps.googleusercontent.com",
+          "client_id": "170268012957-4m5pe4g35b7jmkak6cdgkrlkbui6u9e3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.apps.dcodertech.coursesurfer",
+            "certificate_hash": "92274cc7505a915e3cea540d0874cc0ae00bfbd9"
+          }
+        },
+        {
+          "client_id": "170268012957-7m74n9i6mukblhhe1h6iepqj5glngbp4.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.apps.dcodertech.coursesurfer",

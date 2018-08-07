@@ -6,7 +6,10 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="com.apps.dcodertech.coursesurfer.webView">
-
+    <include android:id="@+id/toolbar"
+        layout="@layout/toolbar"
+        xmlns:android="http://schemas.android.com/apk/res/android">
+    </include>
     <Button
         android:id="@+id/browButton"
         android:layout_width="match_parent"

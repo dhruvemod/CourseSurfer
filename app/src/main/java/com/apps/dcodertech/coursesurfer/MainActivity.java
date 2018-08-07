@@ -355,9 +355,9 @@ public class MainActivity extends AppCompatActivity {
                 StyleableToast.makeText(this, "Signed in!", R.style.mytoast).show();
             } else if (resultCode == RESULT_CANCELED) {
                 // Sign in was canceled by the user, finish the activity
-                StyleableToast.makeText(this, "Restore internet connection and restart app!", R.style.mytoast).show();
+                StyleableToast.makeText(this, "Restore internet ", R.style.mytoast).show();
 
-                finish();
+               // finish();
             }
 
         }
