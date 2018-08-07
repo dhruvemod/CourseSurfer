@@ -142,7 +142,12 @@ public class MainActivity extends AppCompatActivity {
         mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(getApplicationContext(), "Time for an upgrade!", Toast.LENGTH_SHORT).show();
+                imageView.setVisibility(View.INVISIBLE);
+                empty.setVisibility(View.INVISIBLE);
+                clear();
+                String it= (String) parent.getItemAtPosition(position);
+                dataProcessCategory(it);
+                //Toast.makeText(getApplicationContext(), it, Toast.LENGTH_SHORT).show();
             }
         });
         mDrawerList.setOnScrollListener(new AbsListView.OnScrollListener() {
@@ -202,7 +207,7 @@ public class MainActivity extends AppCompatActivity {
         adapter.notifyDataSetChanged();
     }
     private void addDrawerItems() {
-        String osArray[]={"Accounting", "Algebra & Geometry", "Algorithms and Data Structures", "Android Development", "Anthropology", "Art & Design", "Artificial Intelligence", "Astronomy", "Big Data", "Bioinformatics", "Biology", "Business", "Business Intelligence", "Calculus", "Career Development", "Chemistry", "Civil Engineering", "Climate Change", "Communication Skills", "Computer Networking", "Computer Science", "Course Development", "Culture", "Cybersecurity", "Data Analysis", "Data Mining", "Data Science", "Data Visualization", "Databases", "Deep Learning", "Design & Creativity", "DevOps", "Digital Media", "Disease & Disorders", "ESL", "Economics", "Education & Teaching", "Electrical Engineering", "Engineering", "Entrepreneurship", "Environmental Science", "Film & Theatre", "Finance", "Foreign Language", "Foundations of Mathematics", "GIS", "Game Development", "Grammar & Writing", "Health & Medicine", "Health Care", "Higher Education", "History", "Human Resources", "Human Rights", "Humanities", "Industry Specific", "Information Technology", "Internet of Things", "K12", "Law", "Literature", "Machine Learning", "Management & Leadership", "Marketing", "Mathematics", "Mechanical Engineering", "Mobile Development", "Music", "Nanotechnology", "Nursing", "Nutrition & Wellness", "Online Education", "Personal Development", "Philosophy", "Physics", "Political Science", "Professional Development", "Programming", "Programming Languages", "Project Management", "Psychology", "Public Health", "Quantum Mechanics", "Religion", "Robotics", "STEM", "Science", "Self Improvement", "Social Sciences", "Sociology", "Software Development", "Sports", "Statistics & Probability", "Strategic Management", "Teacher Development", "Test Prep", "Urban Planning", "Visual Arts", "Web Development", "iOS Development"};
+        String osArray[]={"Accounting", "Algorithms and Data Structures", "Android Development", "Anthropology", "Art & Design", "Artificial Intelligence", "Astronomy", "Big Data", "Bioinformatics", "Biology", "Business", "Business Intelligence", "Calculus", "Career Development", "Chemistry", "Civil Engineering", "Climate Change", "Communication Skills", "Computer Networking", "Computer Science", "Course Development", "Culture", "Cybersecurity", "Data Analysis", "Data Mining", "Data Science", "Data Visualization", "Databases", "Deep Learning", "Design & Creativity", "DevOps", "Digital Media", "Disease & Disorders", "ESL", "Economics", "Education & Teaching", "Electrical Engineering", "Engineering", "Entrepreneurship", "Environmental Science", "Film & Theatre", "Finance", "Foreign Language", "Foundations of Mathematics", "GIS", "Game Development", "Grammar & Writing", "Health & Medicine", "Health Care", "Higher Education", "History", "Human Resources", "Human Rights", "Humanities", "Industry Specific", "Information Technology", "Internet of Things", "K12", "Law", "Literature", "Machine Learning", "Management & Leadership", "Marketing", "Mathematics", "Mechanical Engineering", "Mobile Development", "Music", "Nanotechnology", "Nursing", "Nutrition & Wellness", "Online Education", "Personal Development", "Philosophy", "Physics", "Political Science", "Professional Development", "Programming", "Programming Languages", "Project Management", "Psychology", "Public Health", "Quantum Mechanics", "Religion", "Robotics", "STEM", "Science", "Self Improvement", "Social Sciences", "Sociology", "Software Development", "Sports", "Statistics & Probability", "Strategic Management", "Teacher Development", "Test Prep", "Urban Planning", "Visual Arts", "Web Development", "iOS Development"};
 
 
 
@@ -288,6 +293,47 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
+    }
+
+    //Adding for category overflow
+    public void dataProcessCategory(String n){
+        databaseReference.child(n).addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+
+                Courses courses = dataSnapshot.getValue(Courses.class);
+                //String keyword = courses.getCourse_keywords();
+                progressBar.setVisibility(View.INVISIBLE);
+
+
+                    courseList.add(courses);
+                    if (adapter != null)
+                        adapter.notifyDataSetChanged();
+
+
+
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     @Override
