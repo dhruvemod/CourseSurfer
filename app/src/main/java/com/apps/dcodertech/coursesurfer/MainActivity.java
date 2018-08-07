@@ -3,6 +3,7 @@ package com.apps.dcodertech.coursesurfer;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -38,9 +39,15 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkError;
+import com.android.volley.NoConnectionError;
+import com.android.volley.ParseError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.ServerError;
+import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
@@ -147,6 +154,7 @@ public class MainActivity extends AppCompatActivity {
                 clear();
                 String it= (String) parent.getItemAtPosition(position);
                 dataProcessCategory(it);
+                drawerLayout.closeDrawers();
                 //Toast.makeText(getApplicationContext(), it, Toast.LENGTH_SHORT).show();
             }
         });
@@ -296,7 +304,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //Adding for category overflow
-    public void dataProcessCategory(String n){
+    public void dataProcessCategory(final String n){
+        checkConnection();
         databaseReference.child(n).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -342,10 +351,11 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == RC_SIGN_IN) {
             if (resultCode == RESULT_OK) {
                 // Sign-in succeeded, set up the UI
-                Toast.makeText(this, "Signed in!", Toast.LENGTH_SHORT).show();
+
+                StyleableToast.makeText(this, "Signed in!", R.style.mytoast).show();
             } else if (resultCode == RESULT_CANCELED) {
                 // Sign in was canceled by the user, finish the activity
-                Toast.makeText(this, "Sign in canceled", Toast.LENGTH_SHORT).show();
+                StyleableToast.makeText(this, "Restore internet connection and restart app!", R.style.mytoast).show();
 
                 finish();
             }
@@ -482,5 +492,28 @@ public class MainActivity extends AppCompatActivity {
             s = edtSeach.getText().toString();
             dataFetch(s);
         }
+    }
+    protected boolean isOnline() {
+
+        ConnectivityManager cm = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        if (netInfo != null && netInfo.isConnectedOrConnecting()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public void checkConnection(){
+        if(isOnline()){
+
+            //Toast.makeText(MainActivity.this, "You are connected to Internet", Toast.LENGTH_SHORT).show();
+        }else{
+            empty.setVisibility(View.VISIBLE);
+            empty.setText("No internet connection!");
+            Toast.makeText(MainActivity.this, "You are not connected to Internet", Toast.LENGTH_SHORT).show();
+
+        }
+
     }
 }
