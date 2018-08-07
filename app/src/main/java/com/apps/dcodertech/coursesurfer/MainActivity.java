@@ -93,6 +93,11 @@ public class MainActivity extends AppCompatActivity {
         mToolbar = findViewById(R.id.toolbar);
         share = findViewById(R.id.share);
         mFirebaseAuth = FirebaseAuth.getInstance();
+        ArrayList<String> categories=new ArrayList<>();
+        String cat[]={"Accounting", "Algebra & Geometry", "Algorithms and Data Structures", "Android Development", "Anthropology", "Art & Design", "Artificial Intelligence", "Astronomy", "Big Data", "Bioinformatics", "Biology", "Business", "Business Intelligence", "Calculus", "Career Development", "Chemistry", "Civil Engineering", "Climate Change", "Communication Skills", "Computer Networking", "Computer Science", "Course Development", "Culture", "Cybersecurity", "Data Analysis", "Data Mining", "Data Science", "Data Visualization", "Databases", "Deep Learning", "Design & Creativity", "DevOps", "Digital Media", "Disease & Disorders", "ESL", "Economics", "Education & Teaching", "Electrical Engineering", "Engineering", "Entrepreneurship", "Environmental Science", "Film & Theatre", "Finance", "Foreign Language", "Foundations of Mathematics", "GIS", "Game Development", "Grammar & Writing", "Health & Medicine", "Health Care", "Higher Education", "History", "Human Resources", "Human Rights", "Humanities", "Industry Specific", "Information Technology", "Internet of Things", "K12", "Law", "Literature", "Machine Learning", "Management & Leadership", "Marketing", "Mathematics", "Mechanical Engineering", "Mobile Development", "Music", "Nanotechnology", "Nursing", "Nutrition & Wellness", "Online Education", "Personal Development", "Philosophy", "Physics", "Political Science", "Professional Development", "Programming", "Programming Languages", "Project Management", "Psychology", "Public Health", "Quantum Mechanics", "Religion", "Robotics", "STEM", "Science", "Self Improvement", "Social Sciences", "Sociology", "Software Development", "Sports", "Statistics & Probability", "Strategic Management", "Teacher Development", "Test Prep", "Urban Planning", "Visual Arts", "Web Development", "iOS Development"};
+        for(int i=0;i<cat.length;i++)
+            categories.add(cat[i]);
+
 
         empty=findViewById(R.id.empty_view);
         imageView=findViewById(R.id.imageView);

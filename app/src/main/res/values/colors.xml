@@ -6,4 +6,5 @@
     <color name="textMain">#263238</color>
     <color name="textSec">#455a64</color>
     <color name="moreSec">#78909c</color>
+    <color name="prim">#1b5e20</color>
 </resources>
