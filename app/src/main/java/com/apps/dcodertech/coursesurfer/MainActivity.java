@@ -258,6 +258,7 @@ public class MainActivity extends AppCompatActivity {
                 StyleableToast.makeText(getApplicationContext(), "Error: No Internet Connection!", R.style.mytoast).show();
             }
         });
+
         requestQueue.add(objectRequest);
     }
     public void dataProcess(String m,String li[]){
@@ -269,6 +270,7 @@ public class MainActivity extends AppCompatActivity {
             databaseReference.child(seg).addChildEventListener(new ChildEventListener() {
                 @Override
                 public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                    int count=0;
 
                     Courses courses = dataSnapshot.getValue(Courses.class);
                     String keyword = courses.getCourse_keywords();
@@ -276,12 +278,19 @@ public class MainActivity extends AppCompatActivity {
                     if (keyword.contains(g) && courses.getCourse_lang().equals("English")) {
 
                         courseList.add(courses);
+                        count++;
                         if (adapter != null)
                             adapter.notifyDataSetChanged();
 
-                    }
-
-
+                    }//Toast.makeText(getApplicationContext(),String.valueOf(count),Toast.LENGTH_SHORT).show();
+                if(count>0){
+                        empty.setVisibility(View.INVISIBLE);
+                }
+                else{
+                        if(adapter.getItemCount()<=0){
+                        empty.setVisibility(View.VISIBLE);
+                        empty.setText("No course Available! Please search for something else.");
+                }}
                 }
 
                 @Override
@@ -306,11 +315,7 @@ public class MainActivity extends AppCompatActivity {
             });
             // Log.i("Sub:",seg);
         }
-        if(courseList.size()==0){
-            empty.setVisibility(View.VISIBLE);
-            empty.setText("No course found. Try something else!");
-            //StyleableToast.makeText(getApplicationContext(),"Please try something else!",R.style.mytoast).show();
-        }
+
 
     }
 
