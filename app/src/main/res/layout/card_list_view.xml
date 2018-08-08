@@ -18,6 +18,7 @@
             android:layout_width="match_parent"
             android:orientation="vertical"
             android:paddingLeft="8dp"
+
             android:layout_height="wrap_content">
 
             <TextView
@@ -26,7 +27,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:singleLine="true"
-                android:textColor="@color/textMain"
+                android:textColor="@android:color/black"
                 android:text="Introduction to Java Programming"
                 android:textSize="20sp"
                 android:textStyle="bold" />
@@ -116,7 +117,8 @@
                     android:layout_width="wrap_content"
                     android:layout_marginLeft="4dp"
                     android:layout_height="wrap_content"
-
+                    android:paddingBottom="2dp"
+                    android:paddingTop="2dp"
                     android:layout_marginTop="4dp"
                     android:background="@android:color/black"
                     android:paddingLeft="5dp"
@@ -126,15 +128,17 @@
 
                 <TextView
                     android:id="@+id/cardhoursView"
-android:layout_marginLeft="4dp"
+                    android:layout_marginLeft="4dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignBaseline="@+id/cardweeksView"
                     android:layout_alignBottom="@+id/cardweeksView"
                     android:layout_toEndOf="@+id/cardweeksView"
-                    android:background="@android:color/holo_blue_light"
+                    android:background="#00897b"
                     android:paddingLeft="5dp"
                     android:paddingRight="5dp"
+                    android:paddingBottom="2dp"
+                    android:paddingTop="2dp"
                     android:text="6-8 hours per week"
                     android:textColor="@android:color/white" />
 

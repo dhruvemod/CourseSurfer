@@ -3,8 +3,10 @@ package com.apps.dcodertech.coursesurfer;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
@@ -18,6 +20,9 @@ import android.widget.ProgressBar;
 public class webView extends AppCompatActivity {
     ProgressBar progressBar;
     WebView browser;
+    private ActionBarDrawerToggle mDrawerToggle;
+    private Toolbar mToolbar;
+
     Button b;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +33,8 @@ public class webView extends AppCompatActivity {
         b=findViewById(R.id.browButton);
         progressBar=new ProgressBar(getApplicationContext());
         browser.setWebViewClient(new myWebClient());
-
+        mToolbar=findViewById(R.id.toolbar);
+        mToolbar.setTitle("Course Surfer");
         Bundle bundle=getIntent().getExtras();
         final String url=bundle.getString("webLink");
         browser.getSettings().setLoadsImagesAutomatically(true);

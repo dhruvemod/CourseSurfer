@@ -8,6 +8,7 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -71,6 +72,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import static android.widget.AbsListView.OnScrollListener.SCROLL_STATE_IDLE;
 
@@ -103,6 +105,8 @@ public class MainActivity extends AppCompatActivity {
     private RequestQueue requestQueue;
     private JsonObjectRequest objectRequest;
     String s;
+    String osArray[]={"Accounting", "Algorithms and Data Structures", "Android Development", "Anthropology", "Art & Design", "Artificial Intelligence", "Astronomy", "Big Data", "Bioinformatics", "Biology", "Business", "Business Intelligence", "Calculus", "Career Development", "Chemistry", "Civil Engineering", "Climate Change", "Communication Skills", "Computer Networking", "Computer Science", "Course Development", "Culture", "Cybersecurity", "Data Analysis", "Data Mining", "Data Science", "Data Visualization", "Databases", "Deep Learning", "Design & Creativity", "DevOps", "Digital Media", "Disease & Disorders", "ESL", "Economics", "Education & Teaching", "Electrical Engineering", "Engineering", "Entrepreneurship", "Environmental Science", "Film & Theatre", "Finance", "Foreign Language", "Foundations of Mathematics", "GIS", "Game Development", "Grammar & Writing", "Health & Medicine", "Health Care", "Higher Education", "History", "Human Resources", "Human Rights", "Humanities", "Industry Specific", "Information Technology", "Internet of Things", "K12", "Law", "Literature", "Machine Learning", "Management & Leadership", "Marketing", "Mathematics", "Mechanical Engineering", "Mobile Development", "Music", "Nanotechnology", "Nursing", "Nutrition & Wellness", "Online Education", "Personal Development", "Philosophy", "Physics", "Political Science", "Professional Development", "Programming", "Programming Languages", "Project Management", "Psychology", "Public Health", "Quantum Mechanics", "Religion", "Robotics", "STEM", "Science", "Self Improvement", "Social Sciences", "Sociology", "Software Development", "Sports", "Statistics & Probability", "Strategic Management", "Teacher Development", "Test Prep", "Urban Planning", "Visual Arts", "Web Development", "iOS Development"};
+
     private String url = "http://13.127.127.229/predict";
 
 
@@ -134,7 +138,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adapter);
-        databaseReference = FirebaseDatabase.getInstance().getReference().child("course_data");
+        databaseReference = FirebaseDatabase.getInstance().getReference().child("course_new_data_final_final");
         mAuthStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -146,6 +150,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         };
+        rand(osArray);
         mDrawerList.bringToFront();
         mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -216,7 +221,6 @@ public class MainActivity extends AppCompatActivity {
         adapter.notifyDataSetChanged();
     }
     private void addDrawerItems() {
-        String osArray[]={"Accounting", "Algorithms and Data Structures", "Android Development", "Anthropology", "Art & Design", "Artificial Intelligence", "Astronomy", "Big Data", "Bioinformatics", "Biology", "Business", "Business Intelligence", "Calculus", "Career Development", "Chemistry", "Civil Engineering", "Climate Change", "Communication Skills", "Computer Networking", "Computer Science", "Course Development", "Culture", "Cybersecurity", "Data Analysis", "Data Mining", "Data Science", "Data Visualization", "Databases", "Deep Learning", "Design & Creativity", "DevOps", "Digital Media", "Disease & Disorders", "ESL", "Economics", "Education & Teaching", "Electrical Engineering", "Engineering", "Entrepreneurship", "Environmental Science", "Film & Theatre", "Finance", "Foreign Language", "Foundations of Mathematics", "GIS", "Game Development", "Grammar & Writing", "Health & Medicine", "Health Care", "Higher Education", "History", "Human Resources", "Human Rights", "Humanities", "Industry Specific", "Information Technology", "Internet of Things", "K12", "Law", "Literature", "Machine Learning", "Management & Leadership", "Marketing", "Mathematics", "Mechanical Engineering", "Mobile Development", "Music", "Nanotechnology", "Nursing", "Nutrition & Wellness", "Online Education", "Personal Development", "Philosophy", "Physics", "Political Science", "Professional Development", "Programming", "Programming Languages", "Project Management", "Psychology", "Public Health", "Quantum Mechanics", "Religion", "Robotics", "STEM", "Science", "Self Improvement", "Social Sciences", "Sociology", "Software Development", "Sports", "Statistics & Probability", "Strategic Management", "Teacher Development", "Test Prep", "Urban Planning", "Visual Arts", "Web Development", "iOS Development"};
 
 
 
@@ -240,6 +244,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                     String mod="";
                     mod=response.getString("query");
+
                     dataProcess(mod,arr);
 
                 } catch (JSONException e) {
@@ -276,6 +281,7 @@ public class MainActivity extends AppCompatActivity {
 
                     }
 
+
                 }
 
                 @Override
@@ -300,7 +306,11 @@ public class MainActivity extends AppCompatActivity {
             });
             // Log.i("Sub:",seg);
         }
-
+        if(courseList.size()==0){
+            empty.setVisibility(View.VISIBLE);
+            empty.setText("No course found. Try something else!");
+            //StyleableToast.makeText(getApplicationContext(),"Please try something else!",R.style.mytoast).show();
+        }
 
     }
 
@@ -317,9 +327,10 @@ public class MainActivity extends AppCompatActivity {
 
 
                     courseList.add(courses);
-                    if (adapter != null)
+                    if (adapter != null) {
+                        progressBar.setVisibility(View.INVISIBLE);
                         adapter.notifyDataSetChanged();
-
+                    }
 
 
             }
@@ -373,7 +384,7 @@ public class MainActivity extends AppCompatActivity {
                 AuthUI.getInstance()
                         .createSignInIntentBuilder()
                         .setAvailableProviders(providers)
-                        .setLogo(R.drawable.surfboard)      
+                        .setLogo(R.drawable.surfboard)
                         .setTheme(R.style.AppTheme)
                         .build(),
                 RC_SIGN_IN);
@@ -521,5 +532,15 @@ public class MainActivity extends AppCompatActivity {
 
         }
 
+    }
+    public void rand(String arrayList[]){
+        Random r=new Random();
+        int n=r.nextInt(arrayList.length-1)+1;
+        String st=arrayList[n];
+        View parentLayout = findViewById(android.R.id.content);
+        progressBar.setVisibility(View.VISIBLE);
+        Snackbar snackbar=Snackbar.make(parentLayout,"Let's study something in "+st,Snackbar.LENGTH_LONG);
+        snackbar.show();
+        dataProcessCategory(st);
     }
 }
