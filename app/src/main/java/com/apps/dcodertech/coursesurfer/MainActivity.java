@@ -52,6 +52,7 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.IdpResponse;
 import com.google.firebase.auth.FirebaseAuth;
@@ -99,14 +100,14 @@ public class MainActivity extends AppCompatActivity {
     private boolean isSearchOpened = false;
     private NetworkInfo info;
     private Button share;
-    private ProgressBar progressBar;
+    //private ProgressBar progressBar;
     private EditText edtSeach;
     private static List<Courses> courseList;
     private RequestQueue requestQueue;
     private JsonObjectRequest objectRequest;
     String s;
     String osArray[]={"Accounting", "Algorithms and Data Structures", "Android Development", "Anthropology", "Art & Design", "Artificial Intelligence", "Astronomy", "Big Data", "Bioinformatics", "Biology", "Business", "Business Intelligence", "Calculus", "Career Development", "Chemistry", "Civil Engineering", "Climate Change", "Communication Skills", "Computer Networking", "Computer Science", "Course Development", "Culture", "Cybersecurity", "Data Analysis", "Data Mining", "Data Science", "Data Visualization", "Databases", "Deep Learning", "Design & Creativity", "DevOps", "Digital Media", "Disease & Disorders", "ESL", "Economics", "Education & Teaching", "Electrical Engineering", "Engineering", "Entrepreneurship", "Environmental Science", "Film & Theatre", "Finance", "Foreign Language", "Foundations of Mathematics", "GIS", "Game Development", "Grammar & Writing", "Health & Medicine", "Health Care", "Higher Education", "History", "Human Resources", "Human Rights", "Humanities", "Industry Specific", "Information Technology", "Internet of Things", "K12", "Law", "Literature", "Machine Learning", "Management & Leadership", "Marketing", "Mathematics", "Mechanical Engineering", "Mobile Development", "Music", "Nanotechnology", "Nursing", "Nutrition & Wellness", "Online Education", "Personal Development", "Philosophy", "Physics", "Political Science", "Professional Development", "Programming", "Programming Languages", "Project Management", "Psychology", "Public Health", "Quantum Mechanics", "Religion", "Robotics", "STEM", "Science", "Self Improvement", "Social Sciences", "Sociology", "Software Development", "Sports", "Statistics & Probability", "Strategic Management", "Teacher Development", "Test Prep", "Urban Planning", "Visual Arts", "Web Development", "iOS Development"};
-
+    private ShimmerFrameLayout mShimmerViewContainer;
     private String url = "http://13.127.127.229/predict";
 
 
@@ -117,6 +118,8 @@ public class MainActivity extends AppCompatActivity {
         mDrawerList = findViewById(R.id.navList);
         recyclerView =findViewById(R.id.recycler_view);
         mToolbar = findViewById(R.id.toolbar);
+        mShimmerViewContainer = findViewById(R.id.shimmer_view_container);
+
         drawerLayout=findViewById(R.id.drawer_layout);
         share = findViewById(R.id.share);
         mActivityTitle = getTitle().toString();
@@ -127,8 +130,8 @@ public class MainActivity extends AppCompatActivity {
         addDrawerItems();
 
         empty=findViewById(R.id.empty_view);
-        imageView=findViewById(R.id.imageView);
-        progressBar=findViewById(R.id.progressBar);
+
+        //progressBar=findViewById(R.id.progressBar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
@@ -155,7 +158,7 @@ public class MainActivity extends AppCompatActivity {
         mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                imageView.setVisibility(View.INVISIBLE);
+                //imageView.setVisibility(View.INVISIBLE);
                 empty.setVisibility(View.INVISIBLE);
                 clear();
                 String it= (String) parent.getItemAtPosition(position);
@@ -236,7 +239,7 @@ public class MainActivity extends AppCompatActivity {
         objectRequest = new JsonObjectRequest(Request.Method.POST, url, new JSONObject(map), new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                progressBar.setVisibility(View.VISIBLE);
+               // progressBar.setVisibility(View.VISIBLE);
                 try {
                     JSONArray array=response.getJSONArray("sub");
                     String arr[]=new String[array.length()];
@@ -261,6 +264,8 @@ public class MainActivity extends AppCompatActivity {
         });
 
         requestQueue.add(objectRequest);
+        mShimmerViewContainer.stopShimmerAnimation();
+        mShimmerViewContainer.setVisibility(View.GONE);
     }
     public void dataProcess(String m,String li[]){
 
@@ -275,7 +280,7 @@ public class MainActivity extends AppCompatActivity {
 
                     Courses courses = dataSnapshot.getValue(Courses.class);
                     String keyword = courses.getCourse_keywords();
-                    progressBar.setVisibility(View.INVISIBLE);
+                    //progressBar.setVisibility(View.INVISIBLE);
                     if (keyword.contains(g) && courses.getCourse_lang().equals("English")) {
 
                         courseList.add(courses);
@@ -330,13 +335,13 @@ public class MainActivity extends AppCompatActivity {
                 Courses courses = dataSnapshot.getValue(Courses.class);
 
                 //String keyword = courses.getCourse_keywords();
-                progressBar.setVisibility(View.INVISIBLE);
+                //progressBar.setVisibility(View.INVISIBLE);
 
                     if(courses.getCourse_lang().equals("English")) {
                         courseList.add(courses);
                     }
                     if (adapter != null) {
-                        progressBar.setVisibility(View.INVISIBLE);
+                       // progressBar.setVisibility(View.INVISIBLE);
                         adapter.notifyDataSetChanged();
                     }
 
@@ -432,6 +437,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
+        mShimmerViewContainer.startShimmerAnimation();
         mFirebaseAuth.addAuthStateListener(mAuthStateListener);
     }
     @Override
@@ -512,7 +518,7 @@ public class MainActivity extends AppCompatActivity {
         if (TextUtils.isEmpty(edtSeach.getText())) {
             StyleableToast.makeText(getApplicationContext(), "Please enter the course first!", R.style.mytoast).show();
         } else {
-            imageView.setVisibility(View.INVISIBLE);
+            //imageView.setVisibility(View.INVISIBLE);
             empty.setVisibility(View.INVISIBLE);
             clear();
             s = edtSeach.getText().toString();
@@ -547,7 +553,7 @@ public class MainActivity extends AppCompatActivity {
         int n=r.nextInt(arrayList.length-1)+1;
         String st=arrayList[n];
         View parentLayout = findViewById(android.R.id.content);
-        progressBar.setVisibility(View.VISIBLE);
+       // progressBar.setVisibility(View.VISIBLE);
         Snackbar snackbar=Snackbar.make(parentLayout,"Let's study something in "+st,Snackbar.LENGTH_LONG);
         snackbar.show();
         dataProcessCategory(st);

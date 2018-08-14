@@ -8,4 +8,6 @@
     <color name="moreSec">#78909c</color>
     <color name="prim">#000</color>
     <color name="toolandtext">#00132b</color>
+    <color name="background">#dddddd</color>
+
 </resources>
