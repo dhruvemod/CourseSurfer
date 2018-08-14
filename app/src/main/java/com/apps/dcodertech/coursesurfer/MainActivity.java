@@ -341,6 +341,8 @@ public class MainActivity extends AppCompatActivity {
                         courseList.add(courses);
                     }
                     if (adapter != null) {
+                        mShimmerViewContainer.stopShimmerAnimation();
+                        mShimmerViewContainer.setVisibility(View.GONE);
                        // progressBar.setVisibility(View.INVISIBLE);
                         adapter.notifyDataSetChanged();
                     }

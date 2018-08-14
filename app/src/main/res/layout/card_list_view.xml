@@ -21,7 +21,7 @@
 
             android:layout_height="wrap_content">
             <LinearLayout
-                android:background="#001a33"
+
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
             <TextView
@@ -31,8 +31,8 @@
                 android:layout_height="wrap_content"
                 android:singleLine="true"
                 android:layout_marginBottom="4dp"
-                android:paddingLeft="8dp"
-                android:textColor="@android:color/white"
+                android:paddingLeft="4dp"
+                android:textColor="@android:color/black"
                 android:text="Introduction to Java Programming"
                 android:textSize="20sp"
                 android:textStyle="bold" />
