@@ -12,25 +12,31 @@
         android:id="@+id/cardView"
         android:elevation="8dp"
         android:clipToPadding="false"
-        app:cardCornerRadius="4dp"
+        app:cardCornerRadius="6dp"
         >
         <LinearLayout
             android:layout_width="match_parent"
             android:orientation="vertical"
-            android:paddingLeft="8dp"
+
 
             android:layout_height="wrap_content">
-
+            <LinearLayout
+                android:background="#001a33"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
             <TextView
                 android:id="@+id/cardTitleView"
-                android:layout_marginLeft="4dp"
+
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:singleLine="true"
-                android:textColor="@android:color/black"
+                android:layout_marginBottom="4dp"
+                android:paddingLeft="8dp"
+                android:textColor="@android:color/white"
                 android:text="Introduction to Java Programming"
                 android:textSize="20sp"
                 android:textStyle="bold" />
+            </LinearLayout>
             <TextView
                 android:id="@+id/cardAuthorsView"
                 android:layout_width="wrap_content"
@@ -110,34 +116,34 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp">
+                android:paddingBottom="8dp">
 
                 <TextView
                     android:id="@+id/cardweeksView"
                     android:layout_width="wrap_content"
-                    android:layout_marginLeft="4dp"
                     android:layout_height="wrap_content"
-                    android:paddingBottom="2dp"
-                    android:paddingTop="2dp"
+                    android:layout_marginLeft="4dp"
                     android:layout_marginTop="4dp"
-                    android:background="@android:color/black"
+                    android:background="#005b4f"
+                    android:paddingBottom="2dp"
                     android:paddingLeft="5dp"
                     android:paddingRight="5dp"
+                    android:paddingTop="2dp"
                     android:text="7 weeks long"
                     android:textColor="@android:color/white" />
 
                 <TextView
                     android:id="@+id/cardhoursView"
-                    android:layout_marginLeft="4dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignBaseline="@+id/cardweeksView"
                     android:layout_alignBottom="@+id/cardweeksView"
+                    android:layout_marginLeft="4dp"
                     android:layout_toEndOf="@+id/cardweeksView"
                     android:background="#00897b"
+                    android:paddingBottom="2dp"
                     android:paddingLeft="5dp"
                     android:paddingRight="5dp"
-                    android:paddingBottom="2dp"
                     android:paddingTop="2dp"
                     android:text="6-8 hours per week"
                     android:textColor="@android:color/white" />
@@ -148,11 +154,17 @@
                     android:layout_height="25dp"
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentTop="true"
-                    android:layout_marginEnd="19dp"
+                    android:layout_marginEnd="11dp"
                     android:background="@drawable/icons_share" />
             </RelativeLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#001a33">
 
+            </LinearLayout>
         </LinearLayout>
+
 
     </android.support.v7.widget.CardView>
 

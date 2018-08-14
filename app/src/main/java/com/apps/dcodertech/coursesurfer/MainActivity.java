@@ -180,6 +180,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         setupDrawer();
+
     }
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
@@ -327,11 +328,13 @@ public class MainActivity extends AppCompatActivity {
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 
                 Courses courses = dataSnapshot.getValue(Courses.class);
+
                 //String keyword = courses.getCourse_keywords();
                 progressBar.setVisibility(View.INVISIBLE);
 
-
-                    courseList.add(courses);
+                    if(courses.getCourse_lang().equals("English")) {
+                        courseList.add(courses);
+                    }
                     if (adapter != null) {
                         progressBar.setVisibility(View.INVISIBLE);
                         adapter.notifyDataSetChanged();
@@ -407,6 +410,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         mSearchAction = menu.findItem(R.id.action_search);
+
         return super.onPrepareOptionsMenu(menu);
     }
     @Override

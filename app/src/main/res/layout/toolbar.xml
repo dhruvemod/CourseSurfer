@@ -5,7 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:elevation="4dp"
     app:titleTextColor="@android:color/white"
-    android:background="#1b5e20">
+    android:background="@color/toolandtext">
 
 
 </android.support.v7.widget.Toolbar>

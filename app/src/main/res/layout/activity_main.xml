@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:id="@+id/mainlayout"
     android:layout_height="match_parent"
-    android:background="#9ccc65"
+    android:background="#eceff1"
     android:configChanges="orientation"
     android:hardwareAccelerated="false"
     android:orientation="vertical"
