@@ -268,7 +268,8 @@ public class MainActivity extends AppCompatActivity {
         mShimmerViewContainer.setVisibility(View.GONE);
     }
     public void dataProcess(String m,String li[]){
-
+        mShimmerViewContainer.setVisibility(View.VISIBLE);
+        mShimmerViewContainer.startShimmerAnimation();
         final String g=m;
 
         for (int i = 0; i < li.length; i++) {
@@ -285,17 +286,23 @@ public class MainActivity extends AppCompatActivity {
 
                         courseList.add(courses);
                         count++;
-                        if (adapter != null)
+                        if (adapter != null) {
+                            mShimmerViewContainer.stopShimmerAnimation();
+                            mShimmerViewContainer.setVisibility(View.GONE);
                             adapter.notifyDataSetChanged();
-
+                        }
                     }//Toast.makeText(getApplicationContext(),String.valueOf(count),Toast.LENGTH_SHORT).show();
                 if(count>0){
                         empty.setVisibility(View.INVISIBLE);
                 }
                 else{
                         if(adapter.getItemCount()<=0){
-                        empty.setVisibility(View.VISIBLE);
-                        empty.setText("No course Available! Please search for something else.");
+                            mShimmerViewContainer.stopShimmerAnimation();
+                            mShimmerViewContainer.setVisibility(View.GONE);
+                            empty.setVisibility(View.VISIBLE);
+
+                            empty.setText("No course Available! Please search for something else.");
+
                 }}
                 }
 
@@ -327,6 +334,8 @@ public class MainActivity extends AppCompatActivity {
 
     //Adding for category overflow
     public void dataProcessCategory(final String n){
+        mShimmerViewContainer.setVisibility(View.VISIBLE);
+        mShimmerViewContainer.startShimmerAnimation();
         checkConnection();
         databaseReference.child(n).addChildEventListener(new ChildEventListener() {
             @Override
@@ -543,6 +552,8 @@ public class MainActivity extends AppCompatActivity {
 
             //Toast.makeText(MainActivity.this, "You are connected to Internet", Toast.LENGTH_SHORT).show();
         }else{
+            mShimmerViewContainer.setVisibility(View.GONE);
+            mShimmerViewContainer.stopShimmerAnimation();
             empty.setVisibility(View.VISIBLE);
             empty.setText("No internet connection!");
             Toast.makeText(MainActivity.this, "You are not connected to Internet", Toast.LENGTH_SHORT).show();
