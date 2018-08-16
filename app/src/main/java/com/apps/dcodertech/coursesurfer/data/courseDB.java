@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import com.apps.dcodertech.coursesurfer.Courses;
+import com.muddzdev.styleabletoastlibrary.StyleableToast;
 
 public class courseDB extends SQLiteOpenHelper {
     public final static String DATABASE_NAME = "courses.db";
@@ -27,7 +28,7 @@ public class courseDB extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(coursesContract.courseEntry.COLUMN_NAME, item.getCourse_name());
         values.put(coursesContract.courseEntry.COLUMN_AUTHOR, item.getCourse_prof());
-        values.put(coursesContract.courseEntry.COLUMN_COMPANY, item.getCourse_provider());
+        values.put(coursesContract.courseEntry.COLUMN_COMPANY, item.getCourse_subject());
         values.put(coursesContract.courseEntry.COLUMN_PROVIDER, item.getCourse_provider());
         values.put(coursesContract.courseEntry.COLUMN_UNIVERSITY, item.getCourse_institution());
         values.put(coursesContract.courseEntry.COLUMN_CERTIFICATION, item.getCourse_certifications());
@@ -86,6 +87,12 @@ public class courseDB extends SQLiteOpenHelper {
                 null
         );
         return cursor;
+    }
+    public void deleteData(String name){
+        SQLiteDatabase database=getWritableDatabase();
+        database.delete(coursesContract.courseEntry.TABLE_NAME,coursesContract.courseEntry.COLUMN_NAME+"=?",new String[]{name});
+
+
     }
 
 }

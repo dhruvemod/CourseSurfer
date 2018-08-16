@@ -4,12 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".MainActivity">
 
-    <item
-        android:id="@+id/action_settings"
-        android:orderInCategory="100"
 
-        android:title="Settings"
-        app:showAsAction="never" />
 
     <item
         android:id="@+id/action_search"
@@ -18,4 +13,10 @@
         android:icon="@drawable/icon_search"
         app:showAsAction="always"
         />
+    <item
+        android:id="@+id/bookmarked"
+        android:title="Bookmark"
+        android:orderInCategory="100"
+        android:icon="@drawable/bmark"
+        app:showAsAction="always"/>
 </menu>

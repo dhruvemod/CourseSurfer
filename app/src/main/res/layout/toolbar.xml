@@ -5,6 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:elevation="4dp"
     app:titleTextColor="@android:color/white"
+    android:theme="@style/ArrowStyle"
     android:background="@color/toolandtext">
 
 

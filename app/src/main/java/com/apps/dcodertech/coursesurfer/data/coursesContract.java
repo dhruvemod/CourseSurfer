@@ -2,6 +2,7 @@ package com.apps.dcodertech.coursesurfer.data;
 
 import android.provider.BaseColumns;
 
+
 public class coursesContract {
     public coursesContract(){
 
@@ -20,13 +21,13 @@ public class coursesContract {
     }
     public static final String CREATE_TABLE = "CREATE TABLE " +
             courseEntry.TABLE_NAME + "(" +
-            courseEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+            courseEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
             courseEntry.COLUMN_NAME + " TEXT NOT NULL UNIQUE," +
             courseEntry.COLUMN_AUTHOR + " TEXT NOT NULL," +
             courseEntry.COLUMN_COMPANY + " TEXT NOT NULL," +
-            courseEntry.COLUMN_PROVIDER + " TEXT NOT NULL" +
-            courseEntry.COLUMN_UNIVERSITY + " TEXT NOT NULL" +
-            courseEntry.COLUMN_CERTIFICATION + " TEXT NOT NULL" +
-            courseEntry.COLUMN_WEEKS + " TEXT NOT NULL" +
+            courseEntry.COLUMN_PROVIDER + " TEXT NOT NULL," +
+            courseEntry.COLUMN_UNIVERSITY + " TEXT NOT NULL," +
+            courseEntry.COLUMN_CERTIFICATION + " TEXT NOT NULL," +
+            courseEntry.COLUMN_WEEKS + " TEXT NOT NULL," +
             courseEntry.COLUMN_HOURS + " TEXT NOT NULL" +");";
 }

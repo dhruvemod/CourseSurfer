@@ -2,15 +2,17 @@ package com.apps.dcodertech.coursesurfer;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Paint;
 import android.support.v7.widget.CardView;
-import android.support.v7.widget.ListPopupWindow;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import com.apps.dcodertech.coursesurfer.data.courseDB;
+import com.muddzdev.styleabletoastlibrary.StyleableToast;
 
 import java.util.List;
 
@@ -21,6 +23,8 @@ import java.util.List;
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.MyViewHolder>  {
     private Context context;
     private List<Courses> courses;
+    courseDB courseDB;
+    private int whichActivity;
 
 
     public Courses getItem(int position) {
@@ -29,10 +33,15 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public class MyViewHolder extends RecyclerView.ViewHolder{
         private CardView cardView;
         public TextView title,author,company,provider,univ,certification,week,hours;
-        public Button share;
+        public Button share, bookmark,del;
         public MyViewHolder(View view){
+
             super(view);
+
+            courseDB=new courseDB(view.getContext());
+            del=view.findViewById(R.id.deleteButton);
             share=view.findViewById(R.id.share);
+            bookmark=view.findViewById(R.id.bookmark);
             cardView=view.findViewById(R.id.cardView);
             title=view.findViewById(R.id.cardTitleView);
             author=view.findViewById(R.id.cardAuthorsView);
@@ -42,11 +51,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             certification=view.findViewById(R.id.CardCertificationView);
             week=view.findViewById(R.id.cardweeksView);
             hours=view.findViewById(R.id.cardhoursView);
+
         }
 
 
     }
-    public RecyclerViewAdapter(Context context, List<Courses> courses){
+    public RecyclerViewAdapter(Context context, List<Courses> courses, int i){
+        whichActivity=i;
         this.context=context;
         this.courses=courses;
 
@@ -62,8 +73,14 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         return new MyViewHolder(itemView);
     }
     @Override
-    public void onBindViewHolder(final MyViewHolder holder, int position) {
+    public void onBindViewHolder(final MyViewHolder holder, final int position) {
         final Courses c = courses.get(position);
+        //StyleableToast.makeText(context.getApplicationContext(),c.getCourse_institution(),R.style.mytoast).show();
+        if(whichActivity==0){
+            holder.bookmark.setVisibility(View.INVISIBLE);
+            holder.del.setVisibility(View.VISIBLE);
+        }
+
         holder.title.setText(c.getCourse_name());
         holder.author.setText(c.getCourse_prof());
         holder.company.setText(c.getCourse_subject());
@@ -72,6 +89,39 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         holder.certification.setText(c.getCourse_certifications());
         holder.week.setText(c.getCourse_duration());
         holder.hours.setText(c.getCourse_hours());
+        /*holder.del.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                courseDB.deleteData(c.getCourse_name());
+
+                StyleableToast.makeText(context,"Bookmark removed!",R.style.mytoast).show();
+
+
+                //notifyItemRemoved(position);
+            }
+        });*/
+        holder.bookmark.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                //StyleableToast.makeText(context.getApplicationContext(),c.getCourse_institution(),R.style.mytoast).show();
+
+                Courses cc=new Courses();
+                cc.setCourse_name(c.getCourse_name());
+                cc.setCourse_prof(c.getCourse_prof());
+                cc.setCourse_subject(c.getCourse_subject());
+                cc.setCourse_provider(c.getCourse_provider());
+                cc.setCourse_institution(c.getCourse_institution());
+                cc.setCourse_certifications(c.getCourse_certifications());
+                cc.setCourse_duration(c.getCourse_duration());
+                cc.setCourse_hours(c.getCourse_hours());
+                courseDB.insert(cc);
+                    StyleableToast.makeText(context.getApplicationContext(),"Course Bookmarked!",R.style.mytoast).show();
+
+
+                //StyleableToast.makeText(view.getContext(),c.getCourse_institution(),R.style.mytoast).show();
+            }
+        });
         holder.share.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
