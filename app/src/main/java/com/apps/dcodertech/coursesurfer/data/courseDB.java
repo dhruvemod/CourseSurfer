@@ -91,7 +91,7 @@ public class courseDB extends SQLiteOpenHelper {
     public void deleteData(String name){
         SQLiteDatabase database=getWritableDatabase();
         database.delete(coursesContract.courseEntry.TABLE_NAME,coursesContract.courseEntry.COLUMN_NAME+"=?",new String[]{name});
-
+        database.close();
 
     }
 

@@ -15,6 +15,7 @@ import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.apps.dcodertech.coursesurfer.data.courseDB;
@@ -34,7 +35,7 @@ public class bookmarkActivity extends AppCompatActivity implements RecyclerItemT
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bookmark);
         mToolbar=findViewById(R.id.toolbar);
-        TextView textView=findViewById(R.id.text_bookmark);
+        ImageView textView=findViewById(R.id.text_bookmark);
         mToolbar.setTitle("My Bookmarks");
         courseDB=new courseDB(getApplicationContext());
         Cursor cursor= courseDB.readCourseInfo();

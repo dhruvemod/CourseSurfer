@@ -14,25 +14,22 @@
 
         layout="@layout/toolbar"
 
-        ></include>
+       />
 <RelativeLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <TextView
+    <ImageView
         android:id="@+id/text_bookmark"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginBottom="244dp"
-        android:fontFamily="sans-serif"
+        android:src="@drawable/im_2"
         android:padding="8dp"
-        android:text="No bookmarks available!"
+        android:layout_margin="36dp"
         android:textAlignment="center"
 
 
-        android:textColor="@android:color/black"
-        android:textSize="17sp"
         android:visibility="invisible" />
 
     <android.support.v7.widget.RecyclerView
