@@ -20,6 +20,7 @@ import android.widget.ProgressBar;
 public class webView extends AppCompatActivity {
     ProgressBar progressBar;
     WebView browser;
+
     private ActionBarDrawerToggle mDrawerToggle;
     private Toolbar mToolbar;
 
@@ -42,6 +43,11 @@ public class webView extends AppCompatActivity {
         browser.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
         WebSettings webSettings = browser.getSettings();
         webSettings.setSupportMultipleWindows(true);
+        try{
+            setSupportActionBar(mToolbar);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setHomeButtonEnabled(true);
+        }catch (Exception e){ }
         browser.getProgress();
         browser.loadUrl(url);
         b.setOnClickListener(new View.OnClickListener() {
@@ -89,5 +95,9 @@ public class webView extends AppCompatActivity {
         }
         return super.onKeyDown(keyCode, event);
     }
-
+    @Override
+    public boolean onSupportNavigateUp(){
+        finish();
+        return true;
+    }
 }
