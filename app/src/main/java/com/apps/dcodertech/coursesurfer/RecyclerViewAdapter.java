@@ -1,5 +1,6 @@
 package com.apps.dcodertech.coursesurfer;
 
+import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Paint;
@@ -9,6 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.apps.dcodertech.coursesurfer.data.courseDB;
@@ -27,19 +30,24 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private int whichActivity;
 
 
+
     public Courses getItem(int position) {
         return courses.get(position);
     }
     public class MyViewHolder extends RecyclerView.ViewHolder{
         private CardView cardView;
+        public RelativeLayout  viewForeground;
+        public RelativeLayout viewBackground;
         public TextView title,author,company,provider,univ,certification,week,hours;
-        public Button share, bookmark,del;
+        public Button share, bookmark;
         public MyViewHolder(View view){
 
             super(view);
 
             courseDB=new courseDB(view.getContext());
-            del=view.findViewById(R.id.deleteButton);
+            viewBackground = view.findViewById(R.id.view_background);
+            viewForeground = view.findViewById(R.id.view_foreground);
+
             share=view.findViewById(R.id.share);
             bookmark=view.findViewById(R.id.bookmark);
             cardView=view.findViewById(R.id.cardView);
@@ -66,7 +74,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.card_list_view, parent, false);
-        final MyViewHolder holder = new MyViewHolder(itemView);
+        //final MyViewHolder holder = new MyViewHolder(itemView);
 
 
 
@@ -78,7 +86,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         //StyleableToast.makeText(context.getApplicationContext(),c.getCourse_institution(),R.style.mytoast).show();
         if(whichActivity==0){
             holder.bookmark.setVisibility(View.INVISIBLE);
-            holder.del.setVisibility(View.VISIBLE);
+
         }
 
         holder.title.setText(c.getCourse_name());
@@ -151,4 +159,14 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public int getItemCount() {
         return courses.size();
     }
+    public void removeItem(int position) {
+        courses.remove(position);
+        // notify the item removed by position
+        // to perform recycler view delete animations
+        // NOTE: don't call notifyDataSetChanged()
+        notifyItemRemoved(position);
+    }
 }
+
+
+

@@ -2,6 +2,8 @@ package com.apps.dcodertech.coursesurfer;
 
 import android.app.ActionBar;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -18,7 +20,7 @@ import com.apps.dcodertech.coursesurfer.data.courseDB;
 
 import java.util.ArrayList;
 
-public class bookmarkActivity extends AppCompatActivity {
+public class bookmarkActivity extends AppCompatActivity implements RecyclerItemTouchHelper.RecyclerItemTouchHelperListener {
     private Toolbar mToolbar;
     courseDB courseDB;
     private RecyclerView recyclerView;
@@ -58,17 +60,8 @@ public class bookmarkActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adapter);
-        ItemTouchHelper.SimpleCallback itemTouchHelperCallback=new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
-            @Override
-            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-                return false;
-            }
-
-            @Override
-            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-
-            }
-        };
+        ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, this);
+        new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerView);
 
         try{
             setSupportActionBar(mToolbar);
@@ -103,5 +96,32 @@ public class bookmarkActivity extends AppCompatActivity {
     public boolean onSupportNavigateUp(){
         finish();
         return true;
+    }
+    @Override
+    public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int position) {
+        if (viewHolder instanceof RecyclerViewAdapter.MyViewHolder) {
+            // get the removed item name to display it in snack bar
+            String name = arrayList.get(viewHolder.getAdapterPosition()).getCourse_name();
+
+            courseDB.deleteData(name);
+            
+            adapter.removeItem(viewHolder.getAdapterPosition());
+
+            // showing snack bar with Undo option
+            View parentLayout = findViewById(android.R.id.content);
+
+            Snackbar snackbar = Snackbar
+                    .make(parentLayout, "Bookmark removed!", Snackbar.LENGTH_LONG);
+            /*snackbar.setAction("UNDO", new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    // undo is selected, restore the deleted item
+                    mAdapter.restoreItem(deletedItem, deletedIndex);
+                }
+            });*/
+            snackbar.setActionTextColor(Color.YELLOW);
+            snackbar.show();
+        }
     }
 }
