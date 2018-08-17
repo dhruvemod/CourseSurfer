@@ -10,17 +10,20 @@
         layout="@layout/toolbar"
         xmlns:android="http://schemas.android.com/apk/res/android">
     </include>
-    <Button
-        android:id="@+id/browButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:backgroundTint="#7986cb"
-        android:text="Open in Browser"
-        android:textColor="@android:color/white" />
+
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
+        <android.support.design.widget.FloatingActionButton
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:id="@+id/browButton"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginBottom="25dp"
+            android:layout_marginEnd="25dp" />
 
         <ProgressBar
             android:id="@+id/progressBar1"
@@ -28,14 +31,13 @@
             android:layout_width="wrap_content"
 
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
+            android:layout_centerInParent="true"
             tools:layout_editor_absoluteX="176dp"
             tools:layout_editor_absoluteY="217dp" />
 
         <WebView
             android:id="@+id/webView"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent" />
     </RelativeLayout>
 </LinearLayout>

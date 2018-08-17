@@ -151,6 +151,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 String url = c.getCourse_link();
                 Intent intent=new Intent(view.getContext(),webView.class);
                 intent.putExtra("webLink",url);
+                intent.putExtra("method",c);
                 context.startActivity(intent);
             }
         });

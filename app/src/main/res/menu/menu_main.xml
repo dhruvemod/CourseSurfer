@@ -5,7 +5,15 @@
     tools:context=".MainActivity">
 
 
-
+    <item
+        android:id="@+id/rate"
+        android:title="Rate"
+        android:orderInCategory="100"
+        app:showAsAction="collapseActionView"/>
+    <item
+        android:id="@+id/shareApp"
+        android:title="Share"
+        app:showAsAction="collapseActionView"/>
     <item
         android:id="@+id/action_search"
         android:title="Search"
