@@ -1,6 +1,7 @@
 package com.apps.dcodertech.coursesurfer;
 
 import android.app.ActionBar;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
@@ -13,10 +14,12 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.apps.dcodertech.coursesurfer.data.courseDB;
 
@@ -53,7 +56,8 @@ public class bookmarkActivity extends AppCompatActivity implements RecyclerItemT
                 String certifications = cursor.getString(cursor.getColumnIndex("certification"));
                 String weeks = cursor.getString(cursor.getColumnIndex("weeks"));
                 String hours = cursor.getString(cursor.getColumnIndex("hours"));
-                Courses courses=new Courses(name,authors,company,provider,university,certifications,weeks,hours);
+                String links = cursor.getString(cursor.getColumnIndex("link"));
+                Courses courses=new Courses(name,authors,company,provider,university,certifications,weeks,hours,links);
                 arrayList.add(courses);
             }while(cursor.moveToNext());
         }
@@ -63,11 +67,7 @@ public class bookmarkActivity extends AppCompatActivity implements RecyclerItemT
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adapter);
-        recyclerView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-            }
-        });
+
         ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, this);
         new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerView);
 
@@ -106,6 +106,7 @@ public class bookmarkActivity extends AppCompatActivity implements RecyclerItemT
         finish();
         return true;
     }
+
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int position) {
         if (viewHolder instanceof RecyclerViewAdapter.MyViewHolder) {
@@ -135,4 +136,6 @@ public class bookmarkActivity extends AppCompatActivity implements RecyclerItemT
             snackbar.show();
         }
     }
+
 }
+

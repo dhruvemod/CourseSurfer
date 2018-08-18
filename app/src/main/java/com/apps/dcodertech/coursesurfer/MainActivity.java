@@ -142,7 +142,7 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
         courseList = new ArrayList<Courses>();
-        adapter=new RecyclerViewAdapter(this,courseList, 1);
+        adapter=new RecyclerViewAdapter(this,courseList, 12);
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());

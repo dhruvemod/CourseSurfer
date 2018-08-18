@@ -39,7 +39,7 @@ public class Courses implements Serializable {
         this.sc_url=sc_url;
         this.course_institution=course_institution;
     }
-    public Courses(String name,String auth, String company, String provider, String university, String certification, String week, String hours){
+    public Courses(String name,String auth, String company, String provider, String university, String certification, String week, String hours, String links){
         this.course_name=name;
         this.course_provider=provider;
         this.course_institution=university;
@@ -48,6 +48,7 @@ public class Courses implements Serializable {
         this.course_hours=hours;
         this.course_prof=auth;
         this.course_subject=company;
+        this.course_link=links;
     }
 
     public String getCourse_prof() {

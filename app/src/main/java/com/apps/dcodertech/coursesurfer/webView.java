@@ -9,6 +9,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -52,8 +53,17 @@ public class webView extends AppCompatActivity {
         mToolbar=findViewById(R.id.toolbar);
         mToolbar.setTitle("Course Surfer");
         Bundle bundle=getIntent().getExtras();
-        courses= (Courses) bundle.get("method");
-        final String url=bundle.getString("webLink");
+       String url="";
+        if(bundle.containsKey("webLink")) {
+            courses = (Courses) bundle.get("method");
+            url = bundle.getString("webLink");
+        }
+        else if(bundle.containsKey("web")){
+            Log.i("check", "aya to ahi");
+            courses = (Courses) bundle.get("method");
+            url = bundle.getString("web");
+        }
+        final String j=url;
         browser.getSettings().setLoadsImagesAutomatically(true);
         browser.getSettings().setJavaScriptEnabled(true);
         browser.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
@@ -66,7 +76,7 @@ public class webView extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent i=new Intent(Intent.ACTION_VIEW);
-               i.setData(Uri.parse(url));
+               i.setData(Uri.parse(j));
                 startActivity(i);
             }
         });

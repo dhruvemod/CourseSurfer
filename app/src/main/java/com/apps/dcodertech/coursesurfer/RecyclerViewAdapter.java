@@ -37,13 +37,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         return courses.get(position);
     }
 
-    public class MyViewHolder extends RecyclerView.ViewHolder {
+    public class MyViewHolder extends RecyclerView.ViewHolder  {
         private CardView cardView;
         public RelativeLayout viewForeground;
         public RelativeLayout viewBackground;
-        public TextView title, author, company, provider, univ, certification, week, hours;
+        public TextView title, author, company, provider, univ, certification, week, hours,li;
         public Button share, bookmark;
-
+        public Courses cc;
         public MyViewHolder(View view) {
 
             super(view);
@@ -51,7 +51,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             courseDB = new courseDB(view.getContext());
             viewBackground = view.findViewById(R.id.view_background);
             viewForeground = view.findViewById(R.id.view_foreground);
-
+            li=view.findViewById(R.id.link);
             share = view.findViewById(R.id.share);
             bookmark = view.findViewById(R.id.bookmark);
             cardView = view.findViewById(R.id.cardView);
@@ -64,8 +64,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             week = view.findViewById(R.id.cardweeksView);
             hours = view.findViewById(R.id.cardhoursView);
 
-        }
 
+        }
 
     }
 
@@ -94,7 +94,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             holder.bookmark.setVisibility(View.INVISIBLE);
 
         }
-
+        holder.li.setText(c.getCourse_link());
+        holder.cardView.setTag(holder);
         holder.title.setText(c.getCourse_name());
         holder.author.setText(c.getCourse_prof());
         holder.company.setText(c.getCourse_subject());
@@ -103,17 +104,28 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         holder.certification.setText(c.getCourse_certifications());
         holder.week.setText(c.getCourse_duration());
         holder.hours.setText(c.getCourse_hours());
-
+        final int s=courses.size();
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //Toast.makeText(context, context.getClass().getSimpleName(), Toast.LENGTH_SHORT).show();
+
+                if(whichActivity==0){
+                    String ss=holder.li.getText().toString();
+                    Intent intent = new Intent(view.getContext(), webView.class);
+                    intent.putExtra("webLink", ss);
+                    intent.putExtra("method", c);
+                    context.startActivity(intent);
+                   // Toast.makeText(context, String.valueOf(ss), Toast.LENGTH_SHORT).show();
+
+                }
+                else{
                 String url = c.getCourse_link();
                 Intent intent = new Intent(view.getContext(), webView.class);
                 intent.putExtra("webLink", url);
                 intent.putExtra("method", c);
                 context.startActivity(intent);
-            }
+            }}
         });
         holder.bookmark.setOnClickListener(new View.OnClickListener() {
 

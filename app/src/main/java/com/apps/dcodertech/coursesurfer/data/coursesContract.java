@@ -18,6 +18,8 @@ public class coursesContract {
         public static final String COLUMN_CERTIFICATION = "certification";
         public static final String COLUMN_WEEKS = "weeks";
         public static final String COLUMN_HOURS = "hours";
+        public static final String COLUMN_LINKS = "link";
+
     }
     public static final String CREATE_TABLE = "CREATE TABLE " +
             courseEntry.TABLE_NAME + "(" +
@@ -29,5 +31,7 @@ public class coursesContract {
             courseEntry.COLUMN_UNIVERSITY + " TEXT NOT NULL," +
             courseEntry.COLUMN_CERTIFICATION + " TEXT NOT NULL," +
             courseEntry.COLUMN_WEEKS + " TEXT NOT NULL," +
-            courseEntry.COLUMN_HOURS + " TEXT NOT NULL" +");";
+            courseEntry.COLUMN_HOURS + " TEXT NOT NULL, " +
+            courseEntry.COLUMN_LINKS+" TEXT NOT NULL"+ ");";
+    public static final String DROP_TABLE = "DROP TABLE IF EXISTS " + courseEntry.TABLE_NAME;
 }

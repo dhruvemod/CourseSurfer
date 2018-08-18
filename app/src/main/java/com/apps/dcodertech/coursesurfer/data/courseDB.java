@@ -12,7 +12,7 @@ import com.muddzdev.styleabletoastlibrary.StyleableToast;
 
 public class courseDB extends SQLiteOpenHelper {
     public final static String DATABASE_NAME = "courses.db";
-    public final static int DATABASE_VERSION = 1;
+    public final static int DATABASE_VERSION = 2;
     public courseDB(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -22,6 +22,8 @@ public class courseDB extends SQLiteOpenHelper {
     }
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        db.execSQL(coursesContract.DROP_TABLE );
+        db.execSQL(coursesContract.CREATE_TABLE);
     }
     public void insert(Courses item) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -34,6 +36,7 @@ public class courseDB extends SQLiteOpenHelper {
         values.put(coursesContract.courseEntry.COLUMN_CERTIFICATION, item.getCourse_certifications());
         values.put(coursesContract.courseEntry.COLUMN_WEEKS, item.getCourse_duration());
         values.put(coursesContract.courseEntry.COLUMN_HOURS, item.getCourse_hours());
+        values.put(coursesContract.courseEntry.COLUMN_LINKS, item.getCourse_link());
         long id = db.insert(coursesContract.courseEntry.TABLE_NAME, null, values);
     }
     public Cursor readInfo(String input) {
@@ -74,7 +77,8 @@ public class courseDB extends SQLiteOpenHelper {
                 coursesContract.courseEntry.COLUMN_UNIVERSITY,
                 coursesContract.courseEntry.COLUMN_CERTIFICATION,
                 coursesContract.courseEntry.COLUMN_WEEKS,
-                coursesContract.courseEntry.COLUMN_HOURS
+                coursesContract.courseEntry.COLUMN_HOURS,
+                coursesContract.courseEntry.COLUMN_LINKS
 
         };
         Cursor cursor = db.query(
