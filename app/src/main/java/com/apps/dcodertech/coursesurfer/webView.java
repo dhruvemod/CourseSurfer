@@ -1,5 +1,6 @@
 package com.apps.dcodertech.coursesurfer;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -19,8 +20,13 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.Toast;
+
 import com.apps.dcodertech.coursesurfer.data.courseDB;
 import com.muddzdev.styleabletoastlibrary.StyleableToast;
+
+import java.net.MalformedURLException;
+import java.net.URL;
 
 public class webView extends AppCompatActivity {
     ProgressBar progressBar;
@@ -30,6 +36,7 @@ public class webView extends AppCompatActivity {
     private ActionBarDrawerToggle mDrawerToggle;
     private Toolbar mToolbar;
     FloatingActionButton fab;
+
 
     Button b;
     @Override
@@ -53,21 +60,23 @@ public class webView extends AppCompatActivity {
         WebSettings webSettings = browser.getSettings();
         webSettings.setSupportMultipleWindows(true);
         fab.setImageResource(R.drawable.brow);
-        try{
-            setSupportActionBar(mToolbar);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setHomeButtonEnabled(true);
-        }catch (Exception e){ }
         browser.getProgress();
         browser.loadUrl(url);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent i=new Intent(Intent.ACTION_VIEW);
-                i.setData(Uri.parse(url));
+               i.setData(Uri.parse(url));
                 startActivity(i);
             }
         });
+        try{
+            setSupportActionBar(mToolbar);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setHomeButtonEnabled(true);
+
+        }catch (Exception e){ }
+
     }
     public class myWebClient extends WebViewClient
     {

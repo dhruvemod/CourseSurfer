@@ -109,6 +109,18 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mFirebaseAuth = FirebaseAuth.getInstance();
+        mAuthStateListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user != null) {
+                    onSignedInInitialize(user.getDisplayName());
+                } else {
+                    signUp();
+                }
+            }
+        };
         mDrawerList = findViewById(R.id.navList);
 
         recyclerView =findViewById(R.id.recycler_view);
@@ -119,7 +131,6 @@ public class MainActivity extends AppCompatActivity {
         share = findViewById(R.id.share);
         mActivityTitle = getTitle().toString();
 
-        mFirebaseAuth = FirebaseAuth.getInstance();
         ArrayList<String> categories=new ArrayList<>();
 
         addDrawerItems();
@@ -137,17 +148,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adapter);
         databaseReference = FirebaseDatabase.getInstance().getReference().child("course_new_data_final_final");
-        mAuthStateListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user != null) {
-                    onSignedInInitialize(user.getDisplayName());
-                } else {
-                    signUp();
-                }
-            }
-        };
+
         rand(osArray);
         mDrawerList.bringToFront();
         mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -454,8 +455,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-        mShimmerViewContainer.startShimmerAnimation();
         mFirebaseAuth.addAuthStateListener(mAuthStateListener);
+
+        mShimmerViewContainer.startShimmerAnimation();
     }
     @Override
     public void onStop() {

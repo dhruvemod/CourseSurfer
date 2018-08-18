@@ -1,15 +1,15 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 26
+    compileSdkVersion 27
     defaultConfig {
         applicationId "com.apps.dcodertech.coursesurfer"
         minSdkVersion 19
         targetSdkVersion 26
         multiDexEnabled true
 
-        versionCode 6
-        versionName "1.5"
+        versionCode 7
+        versionName "1.6"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -23,25 +23,24 @@ android {
 dependencies {
     implementation 'com.android.support:multidex:1.0.3'
 
-
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'com.android.support:appcompat-v7:26.1.0'
+    implementation 'com.android.support:appcompat-v7:27.1.1'
     api 'com.google.firebase:firebase-core:16.0.1'
     api 'com.github.florent37:awesomebar:1.0.3'
 
     api 'com.google.firebase:firebase-auth:16.0.3'
     implementation 'com.facebook.shimmer:shimmer:0.1.0@aar'
-    implementation 'com.firebaseui:firebase-ui-auth:3.2.2'
+    implementation 'com.firebaseui:firebase-ui-auth:4.0.0'
 
     api 'com.yanzhikai:TextPathView:0.1.2'
     implementation 'com.google.firebase:firebase-database:16.0.1'
     implementation 'com.muddzdev:styleabletoast:2.0.2'
-    api 'com.android.support:cardview-v7:26.1.0'
+    api 'com.android.support:cardview-v7:27.1.1'
     api 'com.jakewharton:butterknife:8.8.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     api 'com.android.volley:volley:1.1.0'
-    api 'com.android.support:recyclerview-v7:26.1.0'
-    implementation 'com.android.support:design:27.1.0'
+    api 'com.android.support:recyclerview-v7:27.1.1'
+    implementation 'com.android.support:design:27.1.1'
     implementation 'com.google.firebase:firebase-inappmessaging:17.0.0'
     implementation 'com.google.firebase:firebase-inappmessaging-display:17.0.0'
     api 'com.github.bumptech.glide:glide:3.7.0'

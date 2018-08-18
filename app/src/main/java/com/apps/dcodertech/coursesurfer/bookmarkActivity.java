@@ -26,6 +26,7 @@ public class bookmarkActivity extends AppCompatActivity implements RecyclerItemT
     private Toolbar mToolbar;
     courseDB courseDB;
     private RecyclerView recyclerView;
+    ImageView textView;
     public RecyclerViewAdapter adapter;
     ArrayList<Courses> arrayList;
 
@@ -35,7 +36,7 @@ public class bookmarkActivity extends AppCompatActivity implements RecyclerItemT
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bookmark);
         mToolbar=findViewById(R.id.toolbar);
-        ImageView textView=findViewById(R.id.text_bookmark);
+        textView=findViewById(R.id.text_bookmark);
         mToolbar.setTitle("My Bookmarks");
         courseDB=new courseDB(getApplicationContext());
         Cursor cursor= courseDB.readCourseInfo();
@@ -62,6 +63,11 @@ public class bookmarkActivity extends AppCompatActivity implements RecyclerItemT
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adapter);
+        recyclerView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+            }
+        });
         ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, this);
         new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerView);
 
@@ -79,6 +85,7 @@ public class bookmarkActivity extends AppCompatActivity implements RecyclerItemT
         snackbar.show();
 
     }
+
     }
 
     @Override
@@ -108,7 +115,9 @@ public class bookmarkActivity extends AppCompatActivity implements RecyclerItemT
             courseDB.deleteData(name);
 
             adapter.removeItem(viewHolder.getAdapterPosition());
-
+            if(adapter.getItemCount()<=0){
+                textView.setVisibility(View.VISIBLE);
+            }
             // showing snack bar with Undo option
             View parentLayout = findViewById(android.R.id.content);
 
