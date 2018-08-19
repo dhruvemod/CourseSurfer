@@ -94,6 +94,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             holder.bookmark.setVisibility(View.INVISIBLE);
 
         }
+        if(whichActivity==21){
+            holder.viewBackground.setVisibility(View.INVISIBLE);
+        }
         holder.li.setText(c.getCourse_link());
         holder.cardView.setTag(holder);
         holder.title.setText(c.getCourse_name());
