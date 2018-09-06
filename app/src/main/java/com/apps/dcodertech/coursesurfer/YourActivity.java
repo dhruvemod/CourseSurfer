@@ -4,6 +4,10 @@ import android.content.Intent;
 import android.os.Build;
 import android.support.v4.content.ContextCompat;
 import android.os.Bundle;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
 import com.codemybrainsout.onboarder.AhoyOnboarderActivity;
 import com.codemybrainsout.onboarder.AhoyOnboarderCard;
 
@@ -16,27 +20,28 @@ public class YourActivity extends AhoyOnboarderActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
        // setContentView(R.layout.activity_your);
-        AhoyOnboarderCard ahoyOnboarderCard1 = new AhoyOnboarderCard("Course Search", "Click on the search icon to search course on any topic. Also click on the course for further details", R.drawable.tosend);
-        AhoyOnboarderCard ahoyOnboarderCard2 = new AhoyOnboarderCard("Bookmark course", "Click on the bookmark icon on the card to bookmark the course you like.", R.drawable.bookmark_caro);
-        AhoyOnboarderCard ahoyOnboarderCard3 = new AhoyOnboarderCard("Offline Bookmarks", "Click on the bookmark icon on the toolbar to see the already bookmark courses.", R.drawable.db_caro);
-        AhoyOnboarderCard ahoyOnboarderCard4 = new AhoyOnboarderCard("Remove bookmarks", "Left swipe the course card to remove the bookmark.", R.drawable.del);
+
+        AhoyOnboarderCard ahoyOnboarderCard1 = new AhoyOnboarderCard("Course Search", "Click on the search icon to search course on any topic. Also click on the course for further details", R.drawable.please_final);
+        AhoyOnboarderCard ahoyOnboarderCard2 = new AhoyOnboarderCard("Bookmark course", "Click on the bookmark icon on the card to bookmark the course you like.", R.drawable.book_pp);
+        AhoyOnboarderCard ahoyOnboarderCard3 = new AhoyOnboarderCard("Offline Bookmarks", "Click on the bookmark icon on the toolbar to see the already bookmark courses.", R.drawable.chalk);
+        AhoyOnboarderCard ahoyOnboarderCard4 = new AhoyOnboarderCard("Remove bookmarks", "Left swipe the course card to remove the bookmark.", R.drawable.dust);
+        AhoyOnboarderCard ahoyOnboarderCard5 = new AhoyOnboarderCard("Browser View", "Click on the browser icon to view to course in your favorite browser.", R.drawable.brow);
 
         ahoyOnboarderCard1.setBackgroundColor(R.color.black_transparent);
         ahoyOnboarderCard2.setBackgroundColor(R.color.black_transparent);
         ahoyOnboarderCard3.setBackgroundColor(R.color.black_transparent);
         ahoyOnboarderCard4.setBackgroundColor(R.color.black_transparent);
+        ahoyOnboarderCard5.setBackgroundColor(R.color.black_transparent);
         List<AhoyOnboarderCard> pages = new ArrayList<>();
 
         pages.add(ahoyOnboarderCard1);
         pages.add(ahoyOnboarderCard2);
         pages.add(ahoyOnboarderCard3);
         pages.add(ahoyOnboarderCard4);
-
+        pages.add(ahoyOnboarderCard5);
         for (AhoyOnboarderCard page : pages) {
             page.setTitleColor(R.color.white);
 
-            page.iconHeight=1000;
-            page.iconWidth=700;
             page.setDescriptionColor(R.color.white);
         }
 
